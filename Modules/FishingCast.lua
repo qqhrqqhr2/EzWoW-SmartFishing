@@ -152,14 +152,20 @@ function DoubleClickCastEngine.assignCVarSafe(displayName, value)
 end
 
 -- The bobber CVars are only changed while a fishing pole is equipped.
--- The values from just before the pole went on are kept in memory and put
--- back when the pole comes off (or on logout), so nothing extra is saved.
+-- The values from just before the pole went on are saved (so a crash or
+-- disconnect with the pole in hand can still restore them) and put back
+-- when the pole comes off, the option is turned off, or on logout.
 local SOFT_INTERACT_CVARS = {
     { name = "SoftTargetInteract", value = 3, option = "setSoftInteract" },
     { name = "SoftTargetInteractRange", value = 30, option = "expandInteract" },
     { name = "SoftTargetInteractArc", value = 2, option = "expandInteract" },
 }
-local cvarsBeforePole = {}
+local cvarsFallback = {}
+function DoubleClickCastEngine.cvarsBeforePole()
+    if not ns.db then return cvarsFallback end
+    ns.db.cvarsBeforePole = type(ns.db.cvarsBeforePole) == "table" and ns.db.cvarsBeforePole or {}
+    return ns.db.cvarsBeforePole
+end
 
 function DoubleClickCastEngine.commitSoftInteract(forceRestore)
     if InCombatLockdown() and not forceRestore then
@@ -167,6 +173,7 @@ function DoubleClickCastEngine.commitSoftInteract(forceRestore)
         return
     end
     DoubleClickCastEngine.softInteractPending = nil
+    local cvarsBeforePole = DoubleClickCastEngine.cvarsBeforePole()
     local active = not forceRestore and ns.settings and ns.settings.setSoftInteract and DoubleClickCastEngine.containsPole()
     for _, cv in ipairs(SOFT_INTERACT_CVARS) do
         local wanted = active and ns.settings[cv.option]
