@@ -1,0 +1,54 @@
+## Interface: 16001
+## Title: EzWoW - Smart Fishing
+## Title-enUS: EzWoW - Smart Fishing
+## Title-koKR: EzWoW - Smart Fishing
+## Title-deDE: EzWoW - Smart Fishing
+## Title-frFR: EzWoW - Smart Fishing
+## Title-esES: EzWoW - Smart Fishing
+## Title-esMX: EzWoW - Smart Fishing
+## Title-ruRU: EzWoW - Smart Fishing
+## Title-zhCN: EzWoW - Smart Fishing
+## Title-zhTW: EzWoW - Smart Fishing
+## Notes: One-button fishing, auto lure and gear, session stats, catch journal, fishing spots and fish schools on the world map, shared with your guild and party.
+## Notes-enUS: One-button fishing, auto lure and gear, session stats, catch journal, fishing spots and fish schools on the world map, shared with your guild and party.
+## Notes-koKR: 원버튼 낚시, 자동 미끼·장비, 세션 기록, 낚시 도감, 물고기별 낚시 지점과 물고기 떼 위치를 세계지도에 표시하고 길드·파티와 공유합니다.
+## Notes-zhCN: 一键钓鱼、自动鱼饵与装备、时段统计、钓鱼图鉴，在世界地图上显示各鱼种钓点与鱼群，并与公会、队伍分享。
+## Notes-zhTW: 一鍵釣魚、自動魚餌與裝備、時段統計、釣魚圖鑑，在世界地圖上顯示各魚種釣點與魚群，並與公會、隊伍分享。
+## Notes-deDE: Ein-Tasten-Angeln, automatischer Köder und Ausrüstung, Sitzungswerte, Angelkatalog, Angelplätze und Fischschwärme auf der Weltkarte, geteilt mit Gilde und Gruppe.
+## Notes-frFR: Pêche à une touche, appât et équipement automatiques, statistiques de session, catalogue, points de pêche et bancs sur la carte du monde, partagés avec guilde et groupe.
+## Notes-esES: Pesca con una tecla, cebo y equipo automáticos, estadísticas de sesión, catálogo, puntos de pesca y bancos en el mapa del mundo, compartidos con hermandad y grupo.
+## Notes-esMX: Pesca con una tecla, cebo y equipo automáticos, estadísticas de sesión, catálogo, puntos de pesca y bancos en el mapa del mundo, compartidos con hermandad y grupo.
+## Notes-ruRU: Рыбалка одной кнопкой, авто-наживка и экипировка, статистика сессии, журнал улова, рыбные места и косяки на карте мира с обменом данными в гильдии и группе.
+## Author: qqhrqqhr2
+## Version: 1.0.0
+## Category: Professions
+## X-License: GPL-3.0
+## SavedVariables: EzWoW_SmartFishingDB
+## IconTexture: Interface\AddOns\EzWoW-SmartFishing\Media\icon
+## X-Website: https://github.com/qqhrqqhr2/EzWoW-SmartFishing
+## X-Donate: https://buymeacoffee.com/qqhrqqhr2
+## X-Curse-Project-ID: 1743389
+## AddonCompartmentFunc: EzWoW_SmartFishing_OnAddonCompartmentClick
+
+Core\Locales.lua
+Core\UIKit.lua
+Core\Init.lua
+Core\Style.lua
+Core\Widgets.lua
+Core\WorldMapDock.lua
+Data\FishData.lua
+Modules\FishingCast.lua
+Modules\GearManager.lua
+Modules\CatchLog.lua
+Modules\ExpectedRates.lua
+Modules\TooltipHook.lua
+Modules\PartyGuildSync.lua
+UI\MapPins.lua
+UI\Pins.xml
+UI\MapLegend.lua
+UI\MapDockButton.lua
+UI\HUD.lua
+UI\JournalWindow.lua
+UI\MinimapButton.lua
+UI\DonateModal.lua
+UI\OptionsWindow.lua
