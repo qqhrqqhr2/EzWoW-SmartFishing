@@ -151,46 +151,43 @@ function DoubleClickCastEngine.assignCVarSafe(displayName, value)
     end)
 end
 
--- Original CVar values are kept account-wide so turning the option off
--- (or disabling the addon's option) puts the player's own settings back.
+-- The bobber CVars are only changed while a fishing pole is equipped.
+-- The values from just before the pole went on are kept in memory and put
+-- back when the pole comes off (or on logout), so nothing extra is saved.
 local SOFT_INTERACT_CVARS = {
     { name = "SoftTargetInteract", value = 3, option = "setSoftInteract" },
     { name = "SoftTargetInteractRange", value = 30, option = "expandInteract" },
     { name = "SoftTargetInteractArc", value = 2, option = "expandInteract" },
 }
+local cvarsBeforePole = {}
 
-function DoubleClickCastEngine.cvarBackup()
-    local savedDB = _G.EzWoW_SmartFishingDB
-    if type(savedDB) ~= "table" then return nil end
-    savedDB.cvarBackup = type(savedDB.cvarBackup) == "table" and savedDB.cvarBackup or {}
-    return savedDB.cvarBackup
-end
-
-function DoubleClickCastEngine.commitSoftInteract()
-    if InCombatLockdown() then
+function DoubleClickCastEngine.commitSoftInteract(forceRestore)
+    if InCombatLockdown() and not forceRestore then
         DoubleClickCastEngine.softInteractPending = true
         return
     end
     DoubleClickCastEngine.softInteractPending = nil
-    local backup = DoubleClickCastEngine.cvarBackup()
-    if not backup then return end
-    local master = ns.settings.setSoftInteract
+    local active = not forceRestore and ns.settings and ns.settings.setSoftInteract and DoubleClickCastEngine.containsPole()
     for _, cv in ipairs(SOFT_INTERACT_CVARS) do
-        local wanted = master and ns.settings[cv.option]
+        local wanted = active and ns.settings[cv.option]
         local okRead, current = pcall(GetCVar, cv.name)
         if okRead and current ~= nil then
             if wanted then
-                if backup[cv.name] == nil and current ~= tostring(cv.value) then
-                    backup[cv.name] = current
-                end
+                if cvarsBeforePole[cv.name] == nil then cvarsBeforePole[cv.name] = current end
                 DoubleClickCastEngine.assignCVarSafe(cv.name, cv.value)
-            elseif backup[cv.name] ~= nil then
-                DoubleClickCastEngine.assignCVarSafe(cv.name, backup[cv.name])
-                backup[cv.name] = nil
+            elseif cvarsBeforePole[cv.name] ~= nil then
+                DoubleClickCastEngine.assignCVarSafe(cv.name, cvarsBeforePole[cv.name])
+                cvarsBeforePole[cv.name] = nil
             end
         end
     end
 end
+
+ns:SubscribeAddonEvent("PLAYER_EQUIPMENT_CHANGED", function(slot)
+    if slot == 16 or slot == 28 or slot == nil then DoubleClickCastEngine.commitSoftInteract() end
+end)
+-- CVars set here are what the client saves, so the player's own values are what persist
+ns:SubscribeAddonEvent("PLAYER_LOGOUT", function() DoubleClickCastEngine.commitSoftInteract(true) end)
 
 ns:SubscribeAddonEvent("AM_DB_READY", function()
     ns:SubscribeAddonEvent("PLAYER_ENTERING_WORLD", function()
