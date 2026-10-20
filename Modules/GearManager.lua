@@ -11,45 +11,63 @@ local L = ns.L
 
 local equipTargetItemSlot = (C_Item and C_Item.EquipItemByName) or EquipItemByName
 
-local swappedForCombat = false
+-- Weapons are not saved anywhere: the pair worn just before the pole went on
+-- is remembered for this session and is what every "back to weapons" uses.
+local weaponsBeforePole   -- { [16] = itemID, [17] = itemID } while a pole is in the main hand
+local lastWeapons = {}    -- what was worn the last time the main hand held no pole
+local poleBeforeCombat    -- pole taken off by the combat swap
 
 ns:SubscribeAddonEvent("AM_DB_READY", function()
-    local savedDB = ns.db
-    savedDB.gear = savedDB.gear or {}
-    savedDB.gear.fishing, savedDB.gear.normal = nil, nil 
-    savedDB.gear.weapons = savedDB.gear.weapons or {}   
+    ns.db.gear = nil   -- weapon/pole IDs used to be saved here
 end)
 
 function FishingGearManager.isItemInPlayerBags(itemID)
     return itemID and (C_Item.GetItemCount(itemID) > 0)
 end
 
+function FishingGearManager.poleInMainHand()
+    return FishingGearManager.hasPoleItem(GetInventoryItemID("player", 16))
+end
+
+function FishingGearManager.wornWeapons()
+    return { [16] = GetInventoryItemID("player", 16), [17] = GetInventoryItemID("player", 17) }
+end
+
 ns:SubscribeAddonEvent("PLAYER_EQUIPMENT_CHANGED", function(slot)
-    if not ns.db then return end
     if slot ~= 16 and slot ~= 17 and slot ~= nil then return end
-    if ns:HasPole() then
-        ns.db.gear.pole = GetInventoryItemID("player", 16) or ns.db.gear.pole
+    if FishingGearManager.poleInMainHand() then
+        -- pole put on by hand (drag / macro): fall back to the last weapons seen
+        if not weaponsBeforePole and lastWeapons[16] then
+            weaponsBeforePole = { [16] = lastWeapons[16], [17] = lastWeapons[17] }
+        end
     else
-        ns.db.gear.weapons[16] = GetInventoryItemID("player", 16)
-        ns.db.gear.weapons[17] = GetInventoryItemID("player", 17)
+        weaponsBeforePole = nil
+        lastWeapons = FishingGearManager.wornWeapons()
     end
 end)
 
+function FishingGearManager.equipWeaponSet(set)
+    if not (set and FishingGearManager.isItemInPlayerBags(set[16])) then return false end
+    equipTargetItemSlot(set[16], 16)
+    if FishingGearManager.isItemInPlayerBags(set[17]) then equipTargetItemSlot(set[17], 17) end
+    return true
+end
+
 ns:SubscribeAddonEvent("PLAYER_REGEN_DISABLED", function()
-    if not ns.settings or not ns.settings.combatSwap or not ns:HasPole() then return end
-    local boxWidth = ns.db.gear.weapons
-    if not FishingGearManager.isItemInPlayerBags(boxWidth[16]) then return end
-    equipTargetItemSlot(boxWidth[16], 16)
-    if FishingGearManager.isItemInPlayerBags(boxWidth[17]) then equipTargetItemSlot(boxWidth[17], 17) end
-    swappedForCombat = true
+    if not ns.settings or not ns.settings.combatSwap or not FishingGearManager.poleInMainHand() then return end
+    local pole = GetInventoryItemID("player", 16)
+    if FishingGearManager.equipWeaponSet(weaponsBeforePole) then
+        poleBeforeCombat = pole
+    end
 end)
 
 ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", function()
-    if not swappedForCombat then return end
-    swappedForCombat = false
-    if ns.settings.reequipPole and FishingGearManager.isItemInPlayerBags(ns.db.gear.pole) and not ns:HasPole() then
+    local pole = poleBeforeCombat
+    if not pole then return end
+    poleBeforeCombat = nil
+    if ns.settings.reequipPole and FishingGearManager.isItemInPlayerBags(pole) and not FishingGearManager.poleInMainHand() then
         C_Timer.After(0.5, function()
-            if not InCombatLockdown() then equipTargetItemSlot(ns.db.gear.pole, 16) end
+            if not InCombatLockdown() then equipTargetItemSlot(pole, 16) end
         end)
     end
 end)
@@ -110,7 +128,7 @@ function ns:EquipBestPole()
         if bagID and bagBonus > FishingGearManager.resolvePoleBonus(worn) then
             equipTargetItemSlot(bagID, 16)
             ns:Print(L["더 좋은 낚싯대로 바꿨어요: "] .. ns:ItemName(bagID))
-        else
+        elseif FishingGearManager.poleInMainHand() then
             ns:EquipWeapons()
         end
         return
@@ -119,17 +137,15 @@ function ns:EquipBestPole()
         ns:Print(L["가방에 낚싯대가 없어요."])
         return
     end
+    if not FishingGearManager.poleInMainHand() then
+        weaponsBeforePole = FishingGearManager.wornWeapons()
+    end
     equipTargetItemSlot(bagID, 16)
     ns:Print(string.format(L["%s 착용 (낚시 +%d)"], ns:ItemName(bagID), bagBonus))
 end
 
 function ns:EquipWeapons()
-    local boxWidth = ns.db.gear.weapons
-    if FishingGearManager.isItemInPlayerBags(boxWidth[16]) then
-        equipTargetItemSlot(boxWidth[16], 16)
-        if FishingGearManager.isItemInPlayerBags(boxWidth[17]) then equipTargetItemSlot(boxWidth[17], 17) end
-        return true
-    end
+    if FishingGearManager.equipWeaponSet(weaponsBeforePole) then return true end
     ns:Print(L["돌아갈 무기를 가방에서 찾지 못했어요."])
     return false
 end
@@ -141,5 +157,5 @@ function ns:StopFishing()
         ns:Print(L["낚시를 마쳤어요. 이번 세션: %d마리 · %s"]:format(stateFlag.catches, ns:FormatDuration(dur)))
     end
     ns:EndSession()
-    if ns:HasPole() then ns:EquipWeapons() end
+    if FishingGearManager.poleInMainHand() then ns:EquipWeapons() end
 end
