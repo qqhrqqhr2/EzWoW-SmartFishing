@@ -6,6 +6,7 @@ local ADDON, ns = ...
 local type, pairs, ipairs, tonumber, tostring, select, pcall = type, pairs, ipairs, tonumber, tostring, select, pcall
 
 local DoubleClickCastEngine = ns.DoubleClickCastEngine or {}
+local L = ns.L
 ns.DoubleClickCastEngine = DoubleClickCastEngine
 
 local FISHING_IDS = { 131474, 7620, 7731, 7732, 18248 }
@@ -175,18 +176,31 @@ function DoubleClickCastEngine.commitSoftInteract(forceRestore)
     DoubleClickCastEngine.softInteractPending = nil
     local cvarsBeforePole = DoubleClickCastEngine.cvarsBeforePole()
     local active = not forceRestore and ns.settings and ns.settings.setSoftInteract and DoubleClickCastEngine.containsPole()
+    local applied, restored = false, false
     for _, cv in ipairs(SOFT_INTERACT_CVARS) do
         local wanted = active and ns.settings[cv.option]
         local okRead, current = pcall(GetCVar, cv.name)
         if okRead and current ~= nil then
             if wanted then
                 if cvarsBeforePole[cv.name] == nil then cvarsBeforePole[cv.name] = current end
+                if current ~= tostring(cv.value) then applied = true end
                 DoubleClickCastEngine.assignCVarSafe(cv.name, cv.value)
             elseif cvarsBeforePole[cv.name] ~= nil then
+                if current ~= cvarsBeforePole[cv.name] then restored = true end
                 DoubleClickCastEngine.assignCVarSafe(cv.name, cvarsBeforePole[cv.name])
                 cvarsBeforePole[cv.name] = nil
             end
         end
+    end
+    if forceRestore then return end
+    -- tell the player once per change (and once after login if still widened, e.g. after a disconnect)
+    local widened = next(cvarsBeforePole) ~= nil
+    if widened and (applied or not DoubleClickCastEngine.softInteractAnnounced) then
+        DoubleClickCastEngine.softInteractAnnounced = true
+        ns:Print(L["낚싯대를 착용해서 찌를 잘 인식하도록 상호작용 설정을 바꿨어요. 낚시를 마치면 원래대로 돌아갑니다."])
+    elseif restored then
+        DoubleClickCastEngine.softInteractAnnounced = nil
+        ns:Print(L["상호작용 설정을 낚싯대 착용 전 값으로 되돌렸어요."])
     end
 end
 
