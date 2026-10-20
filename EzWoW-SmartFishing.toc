@@ -21,7 +21,7 @@
 ## Notes-ruRU: Рыбалка одной кнопкой, авто-наживка и экипировка, статистика сессии, журнал улова, рыбные места и косяки на карте мира с обменом данными в гильдии и группе.
 ## Author: qqhrqqhr2
 ## Version: 2.0.0
-## Category: Professions
+## Category: EzWoW
 ## X-License: GPL-3.0
 ## SavedVariables: EzWoW_SmartFishingDB
 ## IconTexture: Interface\AddOns\EzWoW-SmartFishing\Media\icon
