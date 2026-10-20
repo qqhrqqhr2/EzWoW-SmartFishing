@@ -11,14 +11,29 @@ local L = ns.L
 
 local equipTargetItemSlot = (C_Item and C_Item.EquipItemByName) or EquipItemByName
 
--- Weapons are not saved anywhere: the pair worn just before the pole went on
--- is remembered for this session and is what every "back to weapons" uses.
-local weaponsBeforePole   -- { [16] = itemID, [17] = itemID } while a pole is in the main hand
+-- The weapons worn just before the pole goes on are saved per character
+-- (so /reload or relogging with the pole in hand still knows them) and
+-- cleared once the main hand holds no pole again.
 local lastWeapons = {}    -- what was worn the last time the main hand held no pole
 local poleBeforeCombat    -- pole taken off by the combat swap
 
+function FishingGearManager.characterKey()
+    return (UnitName("player") or "?") .. "-" .. (GetRealmName and GetRealmName() or "?")
+end
+
+function FishingGearManager.savedWeapons()
+    local store = ns.db and ns.db.weaponsBeforePole
+    return store and store[FishingGearManager.characterKey()]
+end
+
+function FishingGearManager.rememberWeapons(set)
+    if not ns.db then return end
+    ns.db.weaponsBeforePole = ns.db.weaponsBeforePole or {}
+    ns.db.weaponsBeforePole[FishingGearManager.characterKey()] = set and set[16] and { [16] = set[16], [17] = set[17] } or nil
+end
+
 ns:SubscribeAddonEvent("AM_DB_READY", function()
-    ns.db.gear = nil   -- weapon/pole IDs used to be saved here
+    ns.db.gear = nil   -- old format: last weapons rewritten on every equipment change
 end)
 
 function FishingGearManager.isItemInPlayerBags(itemID)
@@ -37,12 +52,12 @@ ns:SubscribeAddonEvent("PLAYER_EQUIPMENT_CHANGED", function(slot)
     if slot ~= 16 and slot ~= 17 and slot ~= nil then return end
     if FishingGearManager.poleInMainHand() then
         -- pole put on by hand (drag / macro): fall back to the last weapons seen
-        if not weaponsBeforePole and lastWeapons[16] then
-            weaponsBeforePole = { [16] = lastWeapons[16], [17] = lastWeapons[17] }
+        if not FishingGearManager.savedWeapons() and lastWeapons[16] then
+            FishingGearManager.rememberWeapons(lastWeapons)
         end
-    else
-        weaponsBeforePole = nil
+    elseif ns.db then
         lastWeapons = FishingGearManager.wornWeapons()
+        if not poleBeforeCombat then FishingGearManager.rememberWeapons(nil) end
     end
 end)
 
@@ -55,9 +70,10 @@ end
 
 ns:SubscribeAddonEvent("PLAYER_REGEN_DISABLED", function()
     if not ns.settings or not ns.settings.combatSwap or not FishingGearManager.poleInMainHand() then return end
-    local pole = GetInventoryItemID("player", 16)
-    if FishingGearManager.equipWeaponSet(weaponsBeforePole) then
-        poleBeforeCombat = pole
+    -- set first: the swap's equipment events must not clear the saved weapons
+    poleBeforeCombat = GetInventoryItemID("player", 16)
+    if not FishingGearManager.equipWeaponSet(FishingGearManager.savedWeapons()) then
+        poleBeforeCombat = nil
     end
 end)
 
@@ -69,6 +85,8 @@ ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", function()
         C_Timer.After(0.5, function()
             if not InCombatLockdown() then equipTargetItemSlot(pole, 16) end
         end)
+    elseif not FishingGearManager.poleInMainHand() then
+        FishingGearManager.rememberWeapons(nil)   -- staying on weapons: back to normal
     end
 end)
 
@@ -138,14 +156,14 @@ function ns:EquipBestPole()
         return
     end
     if not FishingGearManager.poleInMainHand() then
-        weaponsBeforePole = FishingGearManager.wornWeapons()
+        FishingGearManager.rememberWeapons(FishingGearManager.wornWeapons())
     end
     equipTargetItemSlot(bagID, 16)
     ns:Print(string.format(L["%s 착용 (낚시 +%d)"], ns:ItemName(bagID), bagBonus))
 end
 
 function ns:EquipWeapons()
-    if FishingGearManager.equipWeaponSet(weaponsBeforePole) then return true end
+    if FishingGearManager.equipWeaponSet(FishingGearManager.savedWeapons()) then return true end
     ns:Print(L["돌아갈 무기를 가방에서 찾지 못했어요."])
     return false
 end
