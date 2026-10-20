@@ -44,6 +44,21 @@ function FishingGearManager.poleInMainHand()
     return FishingGearManager.hasPoleItem(GetInventoryItemID("player", 16))
 end
 
+-- Clickable item link when cached, plain name otherwise
+function FishingGearManager.itemText(itemID)
+    if not itemID then return "" end
+    local link = (C_Item and C_Item.GetItemInfo and select(2, C_Item.GetItemInfo(itemID)))
+        or (GetItemInfo and select(2, GetItemInfo(itemID)))
+    return link or ns:ItemName(itemID)
+end
+
+function FishingGearManager.weaponSetText(set)
+    local parts = {}
+    if set and set[16] then parts[#parts + 1] = FishingGearManager.itemText(set[16]) end
+    if set and set[17] then parts[#parts + 1] = FishingGearManager.itemText(set[17]) end
+    return #parts > 0 and table.concat(parts, ", ") or L["맨손"]
+end
+
 function FishingGearManager.wornWeapons()
     return { [16] = GetInventoryItemID("player", 16), [17] = GetInventoryItemID("player", 17) }
 end
@@ -54,6 +69,7 @@ ns:SubscribeAddonEvent("PLAYER_EQUIPMENT_CHANGED", function(slot)
         -- pole put on by hand (drag / macro): fall back to the last weapons seen
         if not FishingGearManager.savedWeapons() and lastWeapons[16] then
             FishingGearManager.rememberWeapons(lastWeapons)
+            ns:Print(string.format(L["낚싯대 착용 전 장비를 기억했어요: %s"], FishingGearManager.weaponSetText(lastWeapons)))
         end
     elseif ns.db then
         lastWeapons = FishingGearManager.wornWeapons()
@@ -72,7 +88,10 @@ ns:SubscribeAddonEvent("PLAYER_REGEN_DISABLED", function()
     if not ns.settings or not ns.settings.combatSwap or not FishingGearManager.poleInMainHand() then return end
     -- set first: the swap's equipment events must not clear the saved weapons
     poleBeforeCombat = GetInventoryItemID("player", 16)
-    if not FishingGearManager.equipWeaponSet(FishingGearManager.savedWeapons()) then
+    local saved = FishingGearManager.savedWeapons()
+    if FishingGearManager.equipWeaponSet(saved) then
+        ns:Print(string.format(L["전투 시작: %s 벗고 %s 착용"], FishingGearManager.itemText(poleBeforeCombat), FishingGearManager.weaponSetText(saved)))
+    else
         poleBeforeCombat = nil
     end
 end)
@@ -83,7 +102,10 @@ ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", function()
     poleBeforeCombat = nil
     if ns.settings.reequipPole and FishingGearManager.isItemInPlayerBags(pole) and not FishingGearManager.poleInMainHand() then
         C_Timer.After(0.5, function()
-            if not InCombatLockdown() then equipTargetItemSlot(pole, 16) end
+            if not InCombatLockdown() then
+                equipTargetItemSlot(pole, 16)
+                ns:Print(string.format(L["전투 끝: 다시 %s 착용"], FishingGearManager.itemText(pole)))
+            end
         end)
     elseif not FishingGearManager.poleInMainHand() then
         FishingGearManager.rememberWeapons(nil)   -- staying on weapons: back to normal
@@ -155,15 +177,24 @@ function ns:EquipBestPole()
         ns:Print(L["가방에 낚싯대가 없어요."])
         return
     end
-    if not FishingGearManager.poleInMainHand() then
-        FishingGearManager.rememberWeapons(FishingGearManager.wornWeapons())
-    end
+    local worn = FishingGearManager.wornWeapons()
+    FishingGearManager.rememberWeapons(worn)
     equipTargetItemSlot(bagID, 16)
-    ns:Print(string.format(L["%s 착용 (낚시 +%d)"], ns:ItemName(bagID), bagBonus))
+    if worn[16] then
+        ns:Print(string.format(L["%s 벗고 %s 착용 (낚시 +%d). 낚시를 마치면 원래 장비로 돌아갑니다."],
+            FishingGearManager.weaponSetText(worn), FishingGearManager.itemText(bagID), bagBonus))
+    else
+        ns:Print(string.format(L["%s 착용 (낚시 +%d)"], FishingGearManager.itemText(bagID), bagBonus))
+    end
 end
 
 function ns:EquipWeapons()
-    if FishingGearManager.equipWeaponSet(FishingGearManager.savedWeapons()) then return true end
+    local saved = FishingGearManager.savedWeapons()
+    local pole = GetInventoryItemID("player", 16)
+    if FishingGearManager.equipWeaponSet(saved) then
+        ns:Print(string.format(L["%s 벗고 원래 장비 %s 착용"], FishingGearManager.itemText(pole), FishingGearManager.weaponSetText(saved)))
+        return true
+    end
     ns:Print(L["돌아갈 무기를 가방에서 찾지 못했어요."])
     return false
 end
