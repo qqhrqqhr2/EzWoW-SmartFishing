@@ -151,14 +151,44 @@ function DoubleClickCastEngine.assignCVarSafe(displayName, value)
     end)
 end
 
+-- Original CVar values are kept account-wide so turning the option off
+-- (or disabling the addon's option) puts the player's own settings back.
+local SOFT_INTERACT_CVARS = {
+    { name = "SoftTargetInteract", value = 3, option = "setSoftInteract" },
+    { name = "SoftTargetInteractRange", value = 30, option = "expandInteract" },
+    { name = "SoftTargetInteractArc", value = 2, option = "expandInteract" },
+}
+
+function DoubleClickCastEngine.cvarBackup()
+    local savedDB = _G.EzWoW_SmartFishingDB
+    if type(savedDB) ~= "table" then return nil end
+    savedDB.cvarBackup = type(savedDB.cvarBackup) == "table" and savedDB.cvarBackup or {}
+    return savedDB.cvarBackup
+end
+
 function DoubleClickCastEngine.commitSoftInteract()
-    if InCombatLockdown() or not ns.settings.setSoftInteract then return end
-    
-    DoubleClickCastEngine.assignCVarSafe("SoftTargetInteract", 3)
-    if ns.settings.expandInteract then
-        
-        DoubleClickCastEngine.assignCVarSafe("SoftTargetInteractRange", 30)
-        DoubleClickCastEngine.assignCVarSafe("SoftTargetInteractArc", 2)
+    if InCombatLockdown() then
+        DoubleClickCastEngine.softInteractPending = true
+        return
+    end
+    DoubleClickCastEngine.softInteractPending = nil
+    local backup = DoubleClickCastEngine.cvarBackup()
+    if not backup then return end
+    local master = ns.settings.setSoftInteract
+    for _, cv in ipairs(SOFT_INTERACT_CVARS) do
+        local wanted = master and ns.settings[cv.option]
+        local okRead, current = pcall(GetCVar, cv.name)
+        if okRead and current ~= nil then
+            if wanted then
+                if backup[cv.name] == nil and current ~= tostring(cv.value) then
+                    backup[cv.name] = current
+                end
+                DoubleClickCastEngine.assignCVarSafe(cv.name, cv.value)
+            elseif backup[cv.name] ~= nil then
+                DoubleClickCastEngine.assignCVarSafe(cv.name, backup[cv.name])
+                backup[cv.name] = nil
+            end
+        end
     end
 end
 
@@ -180,7 +210,10 @@ end)
 ns:SubscribeAddonEvent("PLAYER_EQUIPMENT_CHANGED", DoubleClickCastEngine.refreshActiveView)
 ns:SubscribeAddonEvent("BAG_UPDATE_DELAYED", DoubleClickCastEngine.refreshActiveView)
 ns:SubscribeAddonEvent("UNIT_INVENTORY_CHANGED", function(unit) if unit == "player" then DoubleClickCastEngine.refreshActiveView() end end)
-ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", DoubleClickCastEngine.refreshActiveView)
+ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", function()
+    if DoubleClickCastEngine.softInteractPending then DoubleClickCastEngine.commitSoftInteract() end
+    DoubleClickCastEngine.refreshActiveView()
+end)
 
 ns:SubscribeAddonEvent("PLAYER_REGEN_DISABLED", function()
     ClearOverrideBindings(ownerFrame)
