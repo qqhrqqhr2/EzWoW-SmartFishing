@@ -1,5 +1,10 @@
 # EzWoW - Smart Fishing (`EzWoW-SmartFishing`)
 
+## CurseForge
+
+- **Project ID / 프로젝트 ID:** `1743389`
+- **Project page / 프로젝트 페이지:** [EzWoW-SmartFishing](https://www.curseforge.com/wow/addons/wowsmartfishing)
+
 **[한국어](#한국어) · [English](#english)**
 
 WoW Forever (`Interface: 16001`) · `/ezsf`
