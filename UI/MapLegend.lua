@@ -56,6 +56,11 @@ function ZoneDropRateLegend.buildRow(parent, i)
     return rowEntry
 end
 
+function ZoneDropRateLegend.toggleMapPins()
+    ns.settings.showPins = not ns.settings.showPins
+    ns:PublishAddonEvent("AM_SETTINGS_CHANGED", "showPins")
+end
+
 function ZoneDropRateLegend.buildLegend(anchor)
     local container = WorldMapFrame:GetCanvasContainer()
     local windowFrame = CreateFrame("Frame", "EzWoW_SmartFishingMapLegend", container, "BackdropTemplate")
@@ -122,9 +127,31 @@ function ZoneDropRateLegend.buildLegend(anchor)
         if ns.OpenSettings then ns:OpenSettings() end
     end)
 
+    windowFrame.pinsBtn = CreateFrame("Button", nil, windowFrame, "BackdropTemplate")
+    StyleService:Panel(windowFrame.pinsBtn, StyleService.bg, StyleService.border)
+    windowFrame.pinsBtn:SetSize(56, 20)
+    windowFrame.pinsBtn:SetPoint("RIGHT", windowFrame.cfgBtn, "LEFT", -3, 0)
+    windowFrame.pinsBtn.t = StyleService:Text(windowFrame.pinsBtn, 10, StyleService.text)
+    windowFrame.pinsBtn.t:SetPoint("CENTER", 0, 0)
+    windowFrame.pinsBtn.t:SetJustifyH("CENTER")
+    windowFrame.pinsBtn.t:SetText(ns.settings.showPins and L["핀 숨김"] or L["핀 표시"])
+    windowFrame.pinsBtn:SetScript("OnEnter", function(self)
+        self:SetBackdropBorderColor(unpack(StyleService.accent))
+        self.t:SetTextColor(unpack(StyleService.accent))
+        GameTooltip:SetOwner(self, "ANCHOR_TOP")
+        GameTooltip:AddLine(L["지도에 낚시 지점 표시"], unpack(StyleService.accent))
+        GameTooltip:Show()
+    end)
+    windowFrame.pinsBtn:SetScript("OnLeave", function(self)
+        self:SetBackdropBorderColor(unpack(StyleService.border))
+        self.t:SetTextColor(unpack(StyleService.text))
+        GameTooltip:Hide()
+    end)
+    windowFrame.pinsBtn:SetScript("OnClick", ZoneDropRateLegend.toggleMapPins)
+
     windowFrame.title = StyleService:Text(windowFrame, 12, StyleService.accent)
     windowFrame.title:SetPoint("TOPLEFT", 10, -8)
-    windowFrame.title:SetPoint("RIGHT", windowFrame.cfgBtn, "LEFT", -6, 0)
+    windowFrame.title:SetPoint("RIGHT", windowFrame.pinsBtn, "LEFT", -6, 0)
 
     windowFrame.filterBtn = CreateFrame("Button", nil, windowFrame, "BackdropTemplate")
     StyleService:Panel(windowFrame.filterBtn, StyleService.bgSub, StyleService.border)
@@ -213,6 +240,10 @@ function ZoneDropRateLegend.fitHeaderButtons(frame)
     local kit = ns.UIKit
     if not (kit and kit.SizeButtonToText) then return end
     if frame.cfgBtn and frame.cfgBtn.t then kit:SizeButtonToText(frame.cfgBtn, frame.cfgBtn.t, 40, 84, 10) end
+    if frame.pinsBtn and frame.pinsBtn.t then
+        kit:SizeButtonToText(frame.pinsBtn, frame.pinsBtn.t, 56, 110, 10)
+        frame:SetWidth(math.max(frameWidth, frame.cfgBtn:GetWidth() + frame.pinsBtn:GetWidth() + 141))
+    end
     if frame.filterBtn and frame.filterBtn.t then kit:SizeButtonToText(frame.filterBtn, frame.filterBtn.t, 72, 110, 12) end
     if frame.resetFilterBtn and frame.resetFilterBtn.t then kit:SizeButtonToText(frame.resetFilterBtn, frame.resetFilterBtn.t, 42, 90, 10) end
 end
@@ -220,11 +251,14 @@ end
 function ns:UpdateMapLegend()
     if not legend then return end
     if legend.cfgBtn and legend.cfgBtn.t then legend.cfgBtn.t:SetText(L["설정"]) end
+    if legend.pinsBtn and legend.pinsBtn.t then
+        legend.pinsBtn.t:SetText(ns.settings.showPins and L["핀 숨김"] or L["핀 표시"])
+    end
     if legend.filterBtn and legend.filterBtn.t then legend.filterBtn.t:SetText(L["물고기 선택"] .. " ▾") end
     if legend.resetFilterBtn and legend.resetFilterBtn.t then legend.resetFilterBtn.t:SetText(L["모든 물고기"]) end
     ZoneDropRateLegend.fitHeaderButtons(legend)
     local set = ns.settings
-    if not set.showLegend or not set.showPins or not set.mapButton or not WorldMapFrame:IsShown() then
+    if not set.showLegend or not set.mapButton or not WorldMapFrame:IsShown() then
         legend:Hide()
         return
     end
