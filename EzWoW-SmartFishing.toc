@@ -20,7 +20,7 @@
 ## Notes-esMX: Pesca con una tecla, cebo y equipo automáticos, estadísticas de sesión, catálogo, puntos de pesca y bancos en el mapa del mundo, compartidos con hermandad y grupo.
 ## Notes-ruRU: Рыбалка одной кнопкой, авто-наживка и экипировка, статистика сессии, журнал улова, рыбные места и косяки на карте мира с обменом данными в гильдии и группе.
 ## Author: qqhrqqhr2
-## Version: 2.0.3
+## Version: 2.0.4
 ## Category: EzWoW
 ## X-License: GPL-3.0
 ## SavedVariables: EzWoW_SmartFishingDB

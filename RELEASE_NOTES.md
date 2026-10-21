@@ -1,4 +1,3 @@
-# v2.0.3
+# v2.0.4
 
-- 러시아어·중국어 간체에서 영어로 나오던 설정 설명과 메시지를 번역했습니다. (Translate remaining Russian and Simplified Chinese option help and messages.)
-- 언어 변경 도움말을 모든 언어로 번역했습니다. (Translate the language command help in every locale.)
+- 언어 선택을 상자를 누르고 목록에서 고르는 방식으로 바꿨습니다. 누를 때마다 다음 언어로 넘어가지 않습니다. (Pick the language from a drop-down list instead of cycling through languages.)
