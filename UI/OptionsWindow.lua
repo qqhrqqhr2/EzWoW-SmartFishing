@@ -312,22 +312,23 @@ function SettingsDialog.buildConfigWindow()
     end
 
     createSectionDivider(-70, "낚시")
-    local langBtn = createStyledButton(250, -66, 190, 20, "", false, function(_, button)
-        local order = ns.LANGUAGE_ORDER or { "auto", "koKR", "enUS" }
-        local currentState = ns.settings.language or "auto"
-        local entryIndex = 1
-        for index, code in ipairs(order) do
-            if code == currentState then entryIndex = index; break end
-        end
-        if button == "RightButton" then
-            entryIndex = entryIndex - 1; if entryIndex < 1 then entryIndex = #order end
-        else
-            entryIndex = entryIndex + 1; if entryIndex > #order then entryIndex = 1 end
-        end
-        ns:SetLanguage(order[entryIndex])
-        syncUI()
-    end)
-    langBtn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    local langBtn = createStyledButton(250, -66, 190, 20, "", false, nil)
+    -- click the box, then pick a language from the list
+    local langItems = {}
+    for index, code in ipairs(ns.LANGUAGE_ORDER or { "auto", "koKR", "enUS" }) do
+        langItems[index] = { value = code, text = function()
+            return code == "auto" and L["자동 (게임 언어)"] or (ns.LANGUAGE_NAMES and ns.LANGUAGE_NAMES[code]) or code
+        end }
+    end
+    ns.LanguageDropdown.Attach(langBtn, {
+        items = langItems,
+        colors = { bg = Theme.bg, border = Theme.border, accent = Theme.accent, text = Theme.text },
+        get = function() return ns.settings.language or "auto" end,
+        set = function(code)
+            ns:SetLanguage(code)
+            syncUI()
+        end,
+    })
 
     createStyledCheckbox(18, -94, 180, "원버튼 낚시", "oneButton")
     createStyledCheckbox(232, -94, 180, "자동 획득", "autoLoot")

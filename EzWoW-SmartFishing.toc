@@ -51,4 +51,5 @@ UI\HUD.lua
 UI\JournalWindow.lua
 UI\MinimapButton.lua
 UI\DonateModal.lua
+UI\LanguageDropdown.lua
 UI\OptionsWindow.lua
