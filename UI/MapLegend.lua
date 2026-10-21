@@ -207,11 +207,22 @@ function ZoneDropRateLegend.formatPercentageString(p)
     return string.format("%.1f%%", p)
 end
 
+-- Header buttons follow their text length (German / Russian are long) and
+-- shrink the text only past a maximum, so they never overlap the title.
+function ZoneDropRateLegend.fitHeaderButtons(frame)
+    local kit = ns.UIKit
+    if not (kit and kit.SizeButtonToText) then return end
+    if frame.cfgBtn and frame.cfgBtn.t then kit:SizeButtonToText(frame.cfgBtn, frame.cfgBtn.t, 40, 84, 10) end
+    if frame.filterBtn and frame.filterBtn.t then kit:SizeButtonToText(frame.filterBtn, frame.filterBtn.t, 72, 110, 12) end
+    if frame.resetFilterBtn and frame.resetFilterBtn.t then kit:SizeButtonToText(frame.resetFilterBtn, frame.resetFilterBtn.t, 42, 90, 10) end
+end
+
 function ns:UpdateMapLegend()
     if not legend then return end
     if legend.cfgBtn and legend.cfgBtn.t then legend.cfgBtn.t:SetText(L["설정"]) end
     if legend.filterBtn and legend.filterBtn.t then legend.filterBtn.t:SetText(L["물고기 선택"] .. " ▾") end
     if legend.resetFilterBtn and legend.resetFilterBtn.t then legend.resetFilterBtn.t:SetText(L["모든 물고기"]) end
+    ZoneDropRateLegend.fitHeaderButtons(legend)
     local set = ns.settings
     if not set.showLegend or not set.showPins or not set.mapButton or not WorldMapFrame:IsShown() then
         legend:Hide()

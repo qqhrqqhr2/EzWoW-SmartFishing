@@ -228,6 +228,10 @@ function SettingsDialog.buildConfigWindow()
             formatLocalizedLabel:SetText(resolveTextOr or "")
         end
         buttonWidget.label = formatLocalizedLabel
+        ns.UIKit:FitFontString(formatLocalizedLabel, w - 8, 1)
+        if allDynBtns[#allDynBtns] and allDynBtns[#allDynBtns].fs == formatLocalizedLabel then
+            allDynBtns[#allDynBtns].width = w - 8
+        end
         buttonWidget:SetScript("OnEnter", function()
             if buttonWidget.SetBackdropColor then
                 buttonWidget:SetBackdropColor(0.18, 0.27, 0.31, 1)
@@ -258,7 +262,9 @@ function SettingsDialog.buildConfigWindow()
         displayText:SetJustifyH("LEFT")
         displayText:SetTextColor(unpack(Theme.text))
         displayText:SetText(L[rawKey] or rawKey)
+        ns.UIKit:FitFontString(displayText, w or 180, 2)
         themeColor.labelFS = displayText
+        themeColor.labelWidth = w or 180
         themeColor:SetScript("OnEnter", function(self)
             local tipKey = CHECK_TOOLTIPS[key]
             if tipKey and GameTooltip then
@@ -282,6 +288,7 @@ function SettingsDialog.buildConfigWindow()
         lbl:SetJustifyH("LEFT")
         lbl:SetTextColor(unpack(Theme.muted))
         lbl:SetText(L[rawLabelKey] or rawLabelKey)
+        ns.UIKit:FitFontString(lbl, 115, 2)
 
         local minus = createStyledButton(x + 118, y, 22, 20, "-", false, function()
             local entryValue = math.max(minV, math.floor(((ns.settings[key] or 1) - step) / step + 0.5) * step)
@@ -425,16 +432,19 @@ function SettingsDialog.buildConfigWindow()
             else
                 db.fs:SetText(L[db.labelSource] or db.labelSource)
             end
+            if db.width then ns.UIKit:FitFontString(db.fs, db.width, 1) end
         end
         for _, themeColor in ipairs(allChecks) do
             if themeColor.rawKey then
                 themeColor.labelFS:SetText(L[themeColor.rawKey] or themeColor.rawKey)
+                ns.UIKit:FitFontString(themeColor.labelFS, themeColor.labelWidth, 2)
             end
             themeColor:SetChecked(ns.settings[themeColor.key] and true or false)
         end
         for _, stateEntry in ipairs(steppers) do
             if stateEntry.rawLabelKey and stateEntry.lbl then
                 stateEntry.lbl:SetText(L[stateEntry.rawLabelKey] or stateEntry.rawLabelKey)
+                ns.UIKit:FitFontString(stateEntry.lbl, 115, 2)
             end
             stateEntry.valFS:SetText(stateEntry.fmt(ns.settings[stateEntry.key] or 1))
         end
