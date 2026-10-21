@@ -3,6 +3,13 @@
 -- UI/OptionsWindow.lua : EzWoW Style Settings Dialog, Reset Popups & Blizzard Panel
 --===========================================================================
 local ADDON, ns = ...
+-- Text for the game's AddOns panel in the six languages without their own line: { deDE, frFR, esES, ruRU, zhCN, zhTW }
+local PANEL_LANG_INDEX = { deDE = 1, frFR = 2, esES = 3, esMX = 3, ruRU = 4, zhCN = 5, zhTW = 6, de = 1, fr = 2, es = 3, ru = 4 }
+local function panelText(code, ko, en, others)
+    if code == "koKR" or code == "ko" then return ko end
+    local index = PANEL_LANG_INDEX[code or ""]
+    return (index and others and others[index]) or en
+end
 local type, pairs, ipairs, tonumber, tostring, select, pcall = type, pairs, ipairs, tonumber, tostring, select, pcall
 
 local SettingsDialog = ns.SettingsDialog or {}
@@ -531,7 +538,9 @@ function SettingsDialog.constructMainFrame()
         local hasKo = (L["설정"] == "설정")
         desc:SetText(L["낚싯대를 들고 있을 때 키 하나로 던지고, 찌가 물면 같은 키로 건져 올립니다."])
         launchBtn:SetText((L["설정"] or "설정") .. " (/ezsf)")
-        hint:SetText(hasKo and "채팅창에 /ezsf 또는 /ezsf config를 입력해도 열립니다." or "Type /ezsf or /ezsf config in chat to open settings.")
+        local code = ns.settings and ns.settings.language or "auto"
+        if code == "auto" then code = GetLocale() end
+        hint:SetText(panelText(code, "채팅창에 /ezsf 또는 /ezsf config를 입력해도 열립니다.", "Type /ezsf or /ezsf config in chat to open settings.", { "Du kannst die Einstellungen auch mit /ezsf oder /ezsf config im Chat öffnen.", "Vous pouvez aussi ouvrir les options en tapant /ezsf ou /ezsf config dans le chat.", "También puedes abrir las opciones escribiendo /ezsf o /ezsf config en el chat.", "Настройки также открываются командой /ezsf или /ezsf config в чате.", "也可以在聊天框输入 /ezsf 或 /ezsf config 打开设置。", "也可以在聊天框輸入 /ezsf 或 /ezsf config 開啟設定。" }))
     end
     panelFrameEntry:SetScript("OnShow", function(self) self:RefreshTexts() end)
     panelFrameEntry:RefreshTexts()
