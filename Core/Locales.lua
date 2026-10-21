@@ -1684,3 +1684,20 @@ function ns:ApplyLanguage(lang)
     current = LocaleRegistry.resolveActiveLocaleCode(lang)
     for k in pairs(L) do L[k] = nil end
 end
+
+-- World-map legend label.
+translationHelper.enUS["일반 낚시"] = "Open-water fishing"
+translationHelper.deDE["일반 낚시"] = "Angeln im offenen Wasser"
+translationHelper.frFR["일반 낚시"] = "Pêche en eau libre"
+translationHelper.esES["일반 낚시"] = "Pesca en aguas abiertas"
+translationHelper.ruRU["일반 낚시"] = "Рыбалка в открытой воде"
+translationHelper.zhCN["일반 낚시"] = "普通钓鱼"
+translationHelper.zhTW["일반 낚시"] = "一般釣魚"
+
+translationHelper.enUS["핀 숨김"], translationHelper.enUS["핀 표시"] = "Hide pins", "Show pins"
+translationHelper.deDE["핀 숨김"], translationHelper.deDE["핀 표시"] = "Marker aus", "Marker an"
+translationHelper.frFR["핀 숨김"], translationHelper.frFR["핀 표시"] = "Masquer", "Afficher"
+translationHelper.esES["핀 숨김"], translationHelper.esES["핀 표시"] = "Ocultar", "Mostrar"
+translationHelper.ruRU["핀 숨김"], translationHelper.ruRU["핀 표시"] = "Скрыть метки", "Показать метки"
+translationHelper.zhCN["핀 숨김"], translationHelper.zhCN["핀 표시"] = "隐藏标记", "显示标记"
+translationHelper.zhTW["핀 숨김"], translationHelper.zhTW["핀 표시"] = "隱藏標記", "顯示標記"
