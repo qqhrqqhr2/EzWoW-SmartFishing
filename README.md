@@ -49,9 +49,16 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 3. **자동 획득**이 켜져 있으면 전리품을 자동으로 줍습니다.
 4. 미끼 효과가 없거나 끝나면 가방에서 **가장 좋은 미끼**를 찾아 자동으로 바릅니다.
 
-- 원버튼 키는 낚싯대를 들고 있을 때만 바뀌므로, 평소에는 스페이스(점프)가 그대로 동작합니다.
+- 원버튼 키는 낚싯대를 들고 **멈춰 서 있을 때만** 바뀝니다. 이동 중이나 평소에는 스페이스(점프)가 그대로 동작합니다(던진 뒤 건져 올리기는 그대로 됩니다).
+- 미끼는 내 낚시 숙련으로 쓸 수 있는 것만 고릅니다.
 - 전투가 시작되면 무기로, 끝나면 다시 낚싯대로 자동 교체할 수 있습니다.
 - 물고기 아이템 툴팁에는 주요 서식 지역과 확률이 나옵니다.
+
+#### 낚시 소리 · 미니게임
+
+- **낚시 소리 패널**(세션 HUD 오른쪽): 낚시를 던져 기다리는 동안만 효과음을 키워 찌 소리가 잘 들리게 합니다. `+`/`-`로 크기(10~200%, 100%를 넘기면 주 음량까지 올림), 스피커 버튼으로 켜기/끄기. 낚시가 끝나면 원래 음량으로 돌아갑니다.
+- **음악·주변 소리 줄이기**(설정, 기본 꺼짐): 켜면 낚시하는 동안 배경음악과 주변 소리를 끕니다.
+- **미니게임** 버튼(세션 HUD): 찌를 기다리는 동안 미니게임 창을 엽니다. 창은 키를 받지 않으므로 원버튼 키는 그대로 낚시에 쓰입니다.
 
 ### 설정창 (`/ezsf config`)
 
@@ -133,9 +140,16 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 3. With **Auto loot** on, loot is picked up automatically.
 4. If there is no lure (or it ran out), the **best lure** in your bags is applied.
 
-- The key is only rebound while a pole is equipped, so Space still jumps normally otherwise.
+- The key is only rebound while a pole is equipped **and you are standing still**, so Space still jumps while moving and otherwise (reeling in after a cast still works).
+- Only lures your fishing skill allows are picked.
 - You can swap to weapons when combat starts and back to the pole afterwards.
 - Fish item tooltips list their main zones and chances.
+
+#### Fishing sound & mini games
+
+- **Fishing sound panel** (right of the session HUD): turns sound effects up only while your line is out so the splash is easy to hear. `+`/`-` set the level (10–200%; above 100% the master volume goes up too), the speaker button toggles it. Your volume returns when fishing ends.
+- **Mute music & ambience** (settings, off by default): when on, music and ambience are muted while fishing.
+- **Mini games** button (session HUD): opens the mini games while you wait for a bite. The window takes no keys, so the one-button key keeps fishing.
 
 ### Settings window (`/ezsf config`)
 

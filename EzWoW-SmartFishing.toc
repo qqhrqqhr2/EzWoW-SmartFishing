@@ -38,6 +38,7 @@ Core\Widgets.lua
 Core\WorldMapDock.lua
 Data\FishData.lua
 Modules\FishingCast.lua
+Modules\SoundBoost.lua
 Modules\GearManager.lua
 Modules\CatchLog.lua
 Modules\ExpectedRates.lua
@@ -47,6 +48,11 @@ UI\MapPins.lua
 UI\Pins.xml
 UI\MapLegend.lua
 UI\MapDockButton.lua
+Libs\EzWoWMiniGames\MiniGames.lua
+Libs\EzWoWMiniGames\Games\Minesweeper.lua
+Libs\EzWoWMiniGames\Games\Memory.lua
+Libs\EzWoWMiniGames\Games\Puzzle.lua
+Libs\EzWoWMiniGames\Games\Solitaire.lua
 UI\HUD.lua
 UI\JournalWindow.lua
 UI\MinimapButton.lua

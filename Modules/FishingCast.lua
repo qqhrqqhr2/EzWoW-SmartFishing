@@ -13,13 +13,14 @@ local FISHING_IDS = { 131474, 7620, 7731, 7732, 18248 }
 local FISHING_SET = {}
 for _, entityID in ipairs(FISHING_IDS) do FISHING_SET[entityID] = true end
 
+-- skill = fishing skill needed to use the lure
 local LURES = {
-    { id = 6533, bonus = 100 }, 
-    { id = 6532, bonus = 75 },  
-    { id = 7307, bonus = 75 },  
-    { id = 6811, bonus = 50 },  
-    { id = 6530, bonus = 50 },  
-    { id = 6529, bonus = 25 },  
+    { id = 6533, bonus = 100, skill = 100 },
+    { id = 6532, bonus = 75, skill = 100 },
+    { id = 7307, bonus = 75, skill = 100 },
+    { id = 6811, bonus = 50, skill = 50 },
+    { id = 6530, bonus = 50, skill = 50 },
+    { id = 6529, bonus = 25, skill = 1 },
 }
 
 local ownerFrame = CreateFrame("Frame", "EzWoW_SmartFishingBindingOwner")
@@ -47,6 +48,9 @@ DoubleClickCastEngine.refreshClickDirection()
 
 local mode           
 local channeling = false
+-- while the player moves the key is given back to the game (so Space jumps);
+-- a cast can't start while moving anyway
+local moving = false
 
 function DoubleClickCastEngine.resolveFishingSpellName()
     for _, entityID in ipairs(FISHING_IDS) do
@@ -93,9 +97,21 @@ end
 
 function ns:HasPole() return DoubleClickCastEngine.containsPole() end
 
+-- Only lures the player can actually use: the client's own check first,
+-- then the skill table (in case the item is not cached yet).
+function DoubleClickCastEngine.canUseLure(lure)
+    if C_Item.IsUsableItem then
+        local isCallOk, usable = pcall(C_Item.IsUsableItem, lure.id)
+        if isCallOk and usable == false then return false end
+    end
+    local rank = ns:FishingSkill()
+    if rank and lure.skill and rank < lure.skill then return false end
+    return true
+end
+
 function DoubleClickCastEngine.resolveBestLure()
     for _, lure in ipairs(LURES) do
-        if C_Item.GetItemCount(lure.id) > 0 then return lure end
+        if C_Item.GetItemCount(lure.id) > 0 and DoubleClickCastEngine.canUseLure(lure) then return lure end
     end
 end
 
@@ -155,6 +171,9 @@ function DoubleClickCastEngine.refreshActiveView()
     if channeling then
         ns.bobberFound = DoubleClickCastEngine.resolveBobberTargeted()
         DoubleClickCastEngine.assignMode(ns.bobberFound and "interact" or "mouseover")
+    elseif moving then
+        ns.bobberFound = nil
+        DoubleClickCastEngine.assignMode(nil)
     else
         ns.bobberFound = nil
         castButton:SetAttribute("macrotext", DoubleClickCastEngine.assembleMacro())
@@ -258,6 +277,15 @@ end)
 ns:SubscribeAddonEvent("PLAYER_REGEN_DISABLED", function()
     ClearOverrideBindings(ownerFrame)
     mode = nil
+end)
+
+ns:SubscribeAddonEvent("PLAYER_STARTED_MOVING", function()
+    moving = true
+    DoubleClickCastEngine.refreshActiveView()
+end)
+ns:SubscribeAddonEvent("PLAYER_STOPPED_MOVING", function()
+    moving = false
+    DoubleClickCastEngine.refreshActiveView()
 end)
 
 local watcher = CreateFrame("Frame")

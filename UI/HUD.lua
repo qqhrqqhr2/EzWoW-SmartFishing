@@ -106,9 +106,42 @@ function LiveFishingHUD.buildHUD()
     end)
     windowFrame.stop:SetScript("OnClick", function() ns:StopFishing() end)
 
+    -- mini games (shared module, also in EzWoW - Flight Map); the window takes
+    -- no keys, so the one-button key keeps fishing while a game is open
+    local rightOfText = windowFrame.stop
+    if _G.EzWoW_MiniGames then
+        -- a text button like "낚시 종료", so it is easy to spot
+        local games = CreateFrame("Button", nil, windowFrame, "BackdropTemplate")
+        StyleService:Panel(games, { 1, 1, 1, 0.04 }, StyleService.border)
+        games:SetHeight(18)
+        games:SetPoint("RIGHT", windowFrame.stop, "LEFT", -4, 0)
+        games.t = StyleService:Text(games, 10)
+        games.t:SetPoint("CENTER")
+        games.t:SetJustifyH("CENTER")
+        games.t:SetText(_G.EzWoW_MiniGames.T("title"))
+        games.t:SetTextColor(unpack(StyleService.accent))
+        games:SetWidth(games.t:GetStringWidth() + 16)
+        games:SetScript("OnEnter", function(self)
+            self:SetBackdropBorderColor(unpack(StyleService.accent))
+            GameTooltip:SetOwner(self, "ANCHOR_TOP")
+            GameTooltip:AddLine(L["미니게임"], 1, 1, 1)
+            GameTooltip:AddLine(L["찌를 기다리는 동안 미니게임 창을 엽니다. 원버튼 키는 그대로 낚시에 쓰입니다."], unpack(StyleService.muted))
+            GameTooltip:Show()
+        end)
+        games:SetScript("OnLeave", function(self)
+            self:SetBackdropBorderColor(unpack(StyleService.border))
+            GameTooltip:Hide()
+        end)
+        games:SetScript("OnClick", function()
+            if _G.EzWoW_MiniGames then _G.EzWoW_MiniGames.Toggle() end
+        end)
+        windowFrame.games = games
+        rightOfText = games
+    end
+
     windowFrame.last = StyleService:Text(windowFrame, 11)
     windowFrame.last:SetPoint("LEFT", windowFrame.lastIcon, "RIGHT", 6, 0)
-    windowFrame.last:SetPoint("RIGHT", windowFrame.stop, "LEFT", -6, 0)
+    windowFrame.last:SetPoint("RIGHT", rightOfText, "LEFT", -6, 0)
 
     function windowFrame:Update()
         for _, leftPos in ipairs(self.lbls or {}) do
@@ -176,6 +209,7 @@ function LiveFishingHUD.buildHUD()
         elapsed = 0
         self:Update()
     end)
+    if ns.AttachSoundControls then ns.AttachSoundControls(windowFrame) end
     windowFrame:Hide()
     return windowFrame
 end
