@@ -9,7 +9,7 @@ local PartyGuildSpotSync = ns.PartyGuildSpotSync or {}
 ns.PartyGuildSpotSync = PartyGuildSpotSync
 local L = ns.L
 
-local PREFIX = "EzWoWSmartFishSync"
+local PREFIX = "EzWoWSFSync"   -- addon message prefixes are limited to 16 characters
 local MERGE_RADIUS = 0.015
 local MAX_SPOTS_PER_MAP = 400
 local MAX_MSG = 240

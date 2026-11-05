@@ -379,6 +379,7 @@ ns:SubscribeAddonEvent("AM_DB_READY", function()
             order = 4,
             button = button,
             isAuto = WorldMapFilterButton.hasAutoAlign,
+            isShown = function() return not ns.settings or ns.settings.mapButton ~= false end,
             closePanel = function()
                 ns.settings.legendCollapsed = true
                 ns:UpdateMapLegend()

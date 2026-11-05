@@ -48,7 +48,8 @@ function ns:SubscribeAddonEvent(event, fn)
     if not EVENT_DISPATCH_TABLE[event] then
         EVENT_DISPATCH_TABLE[event] = {}
         if not event:match("^AM_") then
-            containerFrame:RegisterEvent(event)
+            -- an event this client lacks must not stop the calling file
+            pcall(containerFrame.RegisterEvent, containerFrame, event)
         end
     end
     table.insert(EVENT_DISPATCH_TABLE[event], fn)

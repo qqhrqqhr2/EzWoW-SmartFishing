@@ -24,9 +24,26 @@ local LURES = {
 
 local ownerFrame = CreateFrame("Frame", "EzWoW_SmartFishingBindingOwner")
 local castButton = CreateFrame("Button", "EzWoW_SmartFishingCastButton", UIParent, "SecureActionButtonTemplate")
-castButton:RegisterForClicks("AnyUp", "AnyDown")
 castButton:SetAttribute("type", "macro")
 castButton:Hide()
+
+-- The binding clicks the button on key down and again on key up. Listen to
+-- only one of the two (the one the game's "cast on key down" option picks),
+-- so one key press casts once and puts the lure on only once.
+local clickDirectionPending
+function DoubleClickCastEngine.refreshClickDirection()
+    if InCombatLockdown() then
+        clickDirectionPending = true
+        return
+    end
+    clickDirectionPending = nil
+    local isCallOk, useKeyDown = false, nil
+    if C_CVar and C_CVar.GetCVarBool then
+        isCallOk, useKeyDown = pcall(C_CVar.GetCVarBool, "ActionButtonUseKeyDown")
+    end
+    castButton:RegisterForClicks((isCallOk and useKeyDown) and "AnyDown" or "AnyUp")
+end
+DoubleClickCastEngine.refreshClickDirection()
 
 local mode           
 local channeling = false
@@ -228,7 +245,12 @@ end)
 ns:SubscribeAddonEvent("PLAYER_EQUIPMENT_CHANGED", DoubleClickCastEngine.refreshActiveView)
 ns:SubscribeAddonEvent("BAG_UPDATE_DELAYED", DoubleClickCastEngine.refreshActiveView)
 ns:SubscribeAddonEvent("UNIT_INVENTORY_CHANGED", function(unit) if unit == "player" then DoubleClickCastEngine.refreshActiveView() end end)
+ns:SubscribeAddonEvent("CVAR_UPDATE", function(cvarName)
+    cvarName = ns.CoerceSafeString(cvarName)
+    if cvarName and cvarName:lower() == "actionbuttonusekeydown" then DoubleClickCastEngine.refreshClickDirection() end
+end)
 ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", function()
+    if clickDirectionPending then DoubleClickCastEngine.refreshClickDirection() end
     if DoubleClickCastEngine.softInteractPending then DoubleClickCastEngine.commitSoftInteract() end
     DoubleClickCastEngine.refreshActiveView()
 end)

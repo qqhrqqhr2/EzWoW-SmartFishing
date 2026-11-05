@@ -1778,3 +1778,21 @@ translationHelper.zhCN["현재 지역 낚시 지점 기록을 지웠어요."] = 
 translationHelper.zhCN["현재 지역의 낚시 지점 기록을 지울까요?"] = "要清除本区域的钓点记录吗？"
 translationHelper.zhCN["확률은 기본 데이터 예상치예요"] = "几率为内置数据的估计值"
 translationHelper.zhTW["  /ezsf lang en — 애드온 언어 변경 (auto, ko, en, de, fr, es, ru, cn, tw)"] = "  /ezsf lang en — 變更插件語言（auto, ko, en, de, fr, es, ru, cn, tw）"
+
+-- One-button key selector tooltip.
+translationHelper.enUS["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "Left-click: next key, Right-click: previous key"
+translationHelper.deDE["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "Linksklick: nächste Taste, Rechtsklick: vorherige Taste"
+translationHelper.frFR["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "Clic gauche : touche suivante, clic droit : touche précédente"
+translationHelper.esES["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "Clic izquierdo: tecla siguiente, clic derecho: tecla anterior"
+translationHelper.ruRU["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "ЛКМ: следующая клавиша, ПКМ: предыдущая клавиша"
+translationHelper.zhCN["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "左键：下一个按键，右键：上一个按键"
+translationHelper.zhTW["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "左鍵：下一個按鍵，右鍵：上一個按鍵"
+
+-- Session panel drag hint.
+translationHelper.enUS["드래그: 창 위치 이동"] = "Drag: move window"
+translationHelper.deDE["드래그: 창 위치 이동"] = "Ziehen: Fenster verschieben"
+translationHelper.frFR["드래그: 창 위치 이동"] = "Glisser : déplacer la fenêtre"
+translationHelper.esES["드래그: 창 위치 이동"] = "Arrastrar: mover ventana"
+translationHelper.ruRU["드래그: 창 위치 이동"] = "Перетаскивание: переместить окно"
+translationHelper.zhCN["드래그: 창 위치 이동"] = "拖动：移动窗口"
+translationHelper.zhTW["드래그: 창 위치 이동"] = "拖曳：移動視窗"

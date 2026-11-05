@@ -131,8 +131,8 @@ ns:SubscribeAddonEvent("UNIT_SPELLCAST_CHANNEL_STOP", function(unit)
         if pendingCast ~= serial then return end
         pendingCast = nil
         local session = ns:Session()
-        if session then session.missed = session.missed + 1 end
-        ns.db.totals.missed = ns.db.totals.missed + 1
+        if session then session.missed = (session.missed or 0) + 1 end
+        ns.db.totals.missed = (ns.db.totals.missed or 0) + 1
         ns:PublishAddonEvent("AM_DATA_CHANGED")
     end)
 end)
