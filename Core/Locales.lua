@@ -1787,6 +1787,13 @@ translationHelper.esES["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"
 translationHelper.ruRU["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "ЛКМ: следующая клавиша, ПКМ: предыдущая клавиша"
 translationHelper.zhCN["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "左键：下一个按键，右键：上一个按键"
 translationHelper.zhTW["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"] = "左鍵：下一個按鍵，右鍵：上一個按鍵"
+translationHelper.enUS["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] = "Click: open the key list, Right-click: next key (Shift+Right-click: previous key)"
+translationHelper.deDE["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] = "Klick: Tastenliste öffnen, Rechtsklick: nächste Taste (Umschalt+Rechtsklick: vorherige Taste)"
+translationHelper.frFR["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] = "Clic : ouvrir la liste des touches, clic droit : touche suivante (Maj+clic droit : touche précédente)"
+translationHelper.esES["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] = "Clic: abrir la lista de teclas, clic derecho: tecla siguiente (Mayús+clic derecho: tecla anterior)"
+translationHelper.ruRU["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] = "Щелчок: открыть список клавиш, ПКМ: следующая клавиша (Shift+ПКМ: предыдущая клавиша)"
+translationHelper.zhCN["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] = "点击：打开按键列表，右键：下一个按键（Shift+右键：上一个按键）"
+translationHelper.zhTW["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] = "點擊：開啟按鍵清單，右鍵：下一個按鍵（Shift+右鍵：上一個按鍵）"
 
 -- Session panel drag hint.
 translationHelper.enUS["드래그: 창 위치 이동"] = "Drag: move window"

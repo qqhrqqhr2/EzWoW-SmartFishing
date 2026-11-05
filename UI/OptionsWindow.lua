@@ -343,27 +343,65 @@ function SettingsDialog.buildConfigWindow()
     createStyledCheckbox(232, -120, 180, "찌 자동 인식", "setSoftInteract")
     createStyledCheckbox(18, -146, 180, "찌 인식 범위 넓히기", "expandInteract")
 
-    local keyBtn = createStyledButton(236, -148, 204, 22, "", false, function(_, button)
+    -- Steps the one-button key forward (1) or back (-1) through the key list
+    local function stepOneButtonKey(step)
         local klVal = SettingsDialog.resolveKeyList()
         local currentState = ns.settings.key or "SPACE"
         local entryIndex = 1
         for index, entryKey in ipairs(klVal) do
             if entryKey[1] == currentState then entryIndex = index; break end
         end
-        if button == "RightButton" then
-            entryIndex = entryIndex - 1; if entryIndex < 1 then entryIndex = #klVal end
-        else
-            entryIndex = entryIndex + 1; if entryIndex > #klVal then entryIndex = 1 end
-        end
+        entryIndex = (entryIndex - 1 + step) % #klVal + 1
         ns.settings.key = klVal[entryIndex][1]
         ns:PublishAddonEvent("AM_SETTINGS_CHANGED", "key")
         syncUI()
-    end)
-    keyBtn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    end
+
+    local keyBtn = createStyledButton(236, -148, 204, 22, "", false, nil)
+    -- Left-click opens the key list; right-click still steps to the next key (Shift: previous)
+    local keyItems = {}
+    for index, entryKey in ipairs(SettingsDialog.resolveKeyList()) do
+        local keyCode = entryKey[1]
+        keyItems[index] = { value = keyCode, text = function()
+            for _, current in ipairs(SettingsDialog.resolveKeyList()) do
+                if current[1] == keyCode then return current[2] end
+            end
+            return keyCode
+        end }
+    end
+    local attachOk = ns.LanguageDropdown and type(ns.LanguageDropdown.Attach) == "function" and pcall(ns.LanguageDropdown.Attach, keyBtn, {
+        items = keyItems,
+        colors = { bg = Theme.bg, border = Theme.border, accent = Theme.accent, text = Theme.text },
+        get = function() return ns.settings.key or "SPACE" end,
+        set = function(keyCode)
+            ns.settings.key = keyCode
+            ns:PublishAddonEvent("AM_SETTINGS_CHANGED", "key")
+            syncUI()
+        end,
+    })
+    local openKeyList = attachOk and keyBtn:GetScript("OnClick")
+    if openKeyList then
+        keyBtn.hasKeyList = true
+        keyBtn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        keyBtn:SetScript("OnClick", function(self, button)
+            if button == "RightButton" then
+                if self.languageList then self.languageList:Hide() end
+                stepOneButtonKey(IsShiftKeyDown() and -1 or 1)
+            else
+                openKeyList(self, button)
+            end
+        end)
+    else
+        -- fallback: plain left/right-click cycling (the old behaviour)
+        keyBtn:SetScript("OnClick", function(_, button)
+            stepOneButtonKey(button == "RightButton" and -1 or 1)
+        end)
+    end
     keyBtn:HookScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText(L["원버튼 키"], Theme.accent[1], Theme.accent[2], Theme.accent[3])
-        GameTooltip:AddLine(L["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"], 0.85, 0.90, 0.94, true)
+        local hint = self.hasKeyList and L["클릭: 키 목록 열기, 오른쪽 클릭: 다음 키 (Shift+오른쪽 클릭: 이전 키)"] or L["왼쪽 클릭: 다음 키, 오른쪽 클릭: 이전 키"]
+        GameTooltip:AddLine(hint, 0.85, 0.90, 0.94, true)
         GameTooltip:Show()
     end)
     keyBtn:HookScript("OnLeave", function() GameTooltip:Hide() end)
