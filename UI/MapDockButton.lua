@@ -394,10 +394,21 @@ ns:SubscribeAddonEvent("AM_DB_READY", function()
     else
         ns.PlaceMapButton(true)
     end
-    hooksecurefunc(WorldMapFrame, "OnMapChanged", function()
+    local function onMapChanged()
         WorldMapFilterButton.refreshLabel()
         ns:UpdateMapLegend()
-    end)
+    end
+    -- map changes come in through a map data provider (the map's own
+    -- extension point) rather than a post-hook on the map's OnMapChanged
+    if WorldMapFrame.AddDataProvider and MapCanvasDataProviderMixin and CreateFromMixins then
+        local provider = CreateFromMixins(MapCanvasDataProviderMixin)
+        provider.RemoveAllData = function() end
+        provider.RefreshAllData = function() end
+        provider.OnMapChanged = onMapChanged
+        WorldMapFrame:AddDataProvider(provider)
+    elseif WorldMapFrame.OnMapChanged then
+        hooksecurefunc(WorldMapFrame, "OnMapChanged", onMapChanged)
+    end
     WorldMapFrame:HookScript("OnShow", function()
         ns.PlaceMapButton()
         WorldMapFilterButton.refreshLabel()

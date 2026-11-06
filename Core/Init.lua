@@ -96,9 +96,46 @@ end
 function ns.CoerceSafeString(v) if ns.IsReadableValue(v) and type(v) == "string" then return v end end
 function ns.CoerceSafeNumber(v) if ns.IsReadableValue(v) and type(v) == "number" and v == v then return v end end
 
-function ns:Print(msg)
-    print("|cff60cea3[EzWoW - Smart Fishing]|r " .. tostring(msg))
+-- Chat lines are held during combat and printed when it ends: adding our
+-- text to the chat history in combat can taint it.
+local deferredChatLines = {}
+local MAX_DEFERRED_CHAT_LINES = 30
+
+function CoreBootstrap.isPlayerInCombat()
+    if InCombatLockdown and InCombatLockdown() then return true end
+    if UnitAffectingCombat then
+        local isCallOk, inCombat = pcall(UnitAffectingCombat, "player")
+        if isCallOk and ns.IsReadableValue(inCombat) and inCombat then return true end
+    end
+    return false
 end
+
+function CoreBootstrap.emitChatLine(line)
+    if CoreBootstrap.isPlayerInCombat() then
+        if #deferredChatLines < MAX_DEFERRED_CHAT_LINES then
+            deferredChatLines[#deferredChatLines + 1] = line
+        end
+        return
+    end
+    print(line)
+end
+
+function CoreBootstrap.flushDeferredChat()
+    if #deferredChatLines == 0 then return end
+    local lines = deferredChatLines
+    deferredChatLines = {}
+    for _, line in ipairs(lines) do print(line) end
+end
+
+function ns:Print(msg)
+    CoreBootstrap.emitChatLine("|cff60cea3[EzWoW - Smart Fishing]|r " .. tostring(msg))
+end
+
+function ns:PrintRaw(msg)
+    CoreBootstrap.emitChatLine(tostring(msg))
+end
+
+ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", CoreBootstrap.flushDeferredChat)
 
 ns:SubscribeAddonEvent("ADDON_LOADED", function(name)
     if name ~= ADDON then return end
@@ -196,18 +233,18 @@ SlashCmdList.EZWOWSMARTFISHING = function(msg)
         ns:PublishAddonEvent("AM_DATA_CHANGED")
     else
         ns:Print(L["명령어:"])
-        print(L["  /ezsf — 낚시 기록 창 열기/닫기"])
-        print(L["  /ezsf config — 설정 열기 (게임 설정 > 애드온)"])
-        print(L["  /ezsf onebutton — 원버튼 낚시 켜기/끄기"])
-        print(L["  /ezsf key F — 원버튼 키 변경 (기본 SPACE)"])
-        print(L["  /ezsf lure — 자동 미끼 켜기/끄기"])
-        print(L["  /ezsf pins — 세계지도 핀 켜기/끄기"])
-        print(L["  /ezsf pole — 가장 좋은 낚싯대 착용 / 평소 무기로"])
-        print(L["  /ezsf hud — 세션 창 켜기/끄기"])
-        print(L["  /ezsf session — 새 세션 시작"])
-        print(L["  /ezsf reset — 현재 지역 지점 기록 삭제 (/ezsf reset all: 전체)"])
-        print(L["  /ezsf lang en — 애드온 언어 변경 (auto, ko, en, de, fr, es, ru, cn, tw)"])
-        print(L["  /ezsf donate — 후원 링크"])
+        ns:PrintRaw(L["  /ezsf — 낚시 기록 창 열기/닫기"])
+        ns:PrintRaw(L["  /ezsf config — 설정 열기 (게임 설정 > 애드온)"])
+        ns:PrintRaw(L["  /ezsf onebutton — 원버튼 낚시 켜기/끄기"])
+        ns:PrintRaw(L["  /ezsf key F — 원버튼 키 변경 (기본 SPACE)"])
+        ns:PrintRaw(L["  /ezsf lure — 자동 미끼 켜기/끄기"])
+        ns:PrintRaw(L["  /ezsf pins — 세계지도 핀 켜기/끄기"])
+        ns:PrintRaw(L["  /ezsf pole — 가장 좋은 낚싯대 착용 / 평소 무기로"])
+        ns:PrintRaw(L["  /ezsf hud — 세션 창 켜기/끄기"])
+        ns:PrintRaw(L["  /ezsf session — 새 세션 시작"])
+        ns:PrintRaw(L["  /ezsf reset — 현재 지역 지점 기록 삭제 (/ezsf reset all: 전체)"])
+        ns:PrintRaw(L["  /ezsf lang en — 애드온 언어 변경 (auto, ko, en, de, fr, es, ru, cn, tw)"])
+        ns:PrintRaw(L["  /ezsf donate — 후원 링크"])
     end
 end
 

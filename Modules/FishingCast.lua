@@ -148,28 +148,36 @@ function DoubleClickCastEngine.assignMode(newMode)
     mode = newMode
 end
 
-local BOBBER_ID = "35591"
+-- the fishing bobber (game object ID)
+local BOBBER_OBJECT_ID = 35591
 
-function DoubleClickCastEngine.resolveBobberTargeted()
-    local guid = ns.CoerceSafeString(ns.UnwrapSafeValue(UnitGUID, "softinteract"))
-    if not guid then return false end
-    local kind, _, _, _, _, entityID = strsplit("-", guid)
-    if kind ~= "GameObject" then return false end
-    if entityID == BOBBER_ID then return true end
-    local displayName = ns.CoerceSafeString(ns.UnwrapSafeValue(UnitName, "softinteract"))
-    return displayName ~= nil and (displayName:find("찌") or displayName:find("Bobber") or displayName:find("Schwimmer") or displayName:find("Flotteur") or displayName:find("Corcho") or displayName:find("浮標")) ~= nil
+-- The game object ID of a "GameObject-0-...-35591-..." GUID, or nil.
+-- Only the object ID field is read: the server and spawn fields around it
+-- may be obfuscated.
+function DoubleClickCastEngine.resolveGameObjectID(guid)
+    guid = ns.CoerceSafeString(guid)
+    if not guid then return nil end
+    return tonumber(guid:match("^GameObject%-[^-]*%-[^-]*%-[^-]*%-[^-]*%-(%d+)%-"))
+end
+
+-- softTargetGUID: the new soft interact target from the change event;
+-- without it the current soft interact unit is read.
+function DoubleClickCastEngine.resolveBobberTargeted(softTargetGUID)
+    local guid = softTargetGUID
+    if guid == nil then guid = ns.UnwrapSafeValue(UnitGUID, "softinteract") end
+    return DoubleClickCastEngine.resolveGameObjectID(guid) == BOBBER_OBJECT_ID
 end
 
 ns.bobberFound = nil
 
-function DoubleClickCastEngine.refreshActiveView()
+function DoubleClickCastEngine.refreshWithSoftTarget(softTargetGUID)
     if not ns.settings or InCombatLockdown() then return end
     if not ns.settings.oneButton or not DoubleClickCastEngine.containsPole() then
         DoubleClickCastEngine.assignMode(nil)
         return
     end
     if channeling then
-        ns.bobberFound = DoubleClickCastEngine.resolveBobberTargeted()
+        ns.bobberFound = DoubleClickCastEngine.resolveBobberTargeted(softTargetGUID)
         DoubleClickCastEngine.assignMode(ns.bobberFound and "interact" or "mouseover")
     elseif moving then
         ns.bobberFound = nil
@@ -179,6 +187,11 @@ function DoubleClickCastEngine.refreshActiveView()
         castButton:SetAttribute("macrotext", DoubleClickCastEngine.assembleMacro())
         DoubleClickCastEngine.assignMode("cast")
     end
+end
+
+-- event handlers pass their own arguments, so they never reach the GUID slot
+function DoubleClickCastEngine.refreshActiveView()
+    DoubleClickCastEngine.refreshWithSoftTarget(nil)
 end
 ns.RefreshFishing = DoubleClickCastEngine.refreshActiveView
 
@@ -196,6 +209,7 @@ local SOFT_INTERACT_CVARS = {
     { name = "SoftTargetInteract", value = 3, option = "setSoftInteract" },
     { name = "SoftTargetInteractRange", value = 30, option = "expandInteract" },
     { name = "SoftTargetInteractArc", value = 2, option = "expandInteract" },
+    { name = "SoftTargetInteractRangeIsHard", value = 0, option = "expandInteract" },
 }
 local cvarsFallback = {}
 function DoubleClickCastEngine.cvarsBeforePole()
@@ -288,6 +302,22 @@ ns:SubscribeAddonEvent("PLAYER_STOPPED_MOVING", function()
     DoubleClickCastEngine.refreshActiveView()
 end)
 
+function DoubleClickCastEngine.refreshBobber(softTargetGUID)
+    local before = ns.bobberFound
+    DoubleClickCastEngine.refreshWithSoftTarget(softTargetGUID)
+    if before ~= ns.bobberFound then ns:PublishAddonEvent("AM_BOBBER_CHANGED") end
+end
+
+-- The soft interact target changing (the bobber landing in reach, or the
+-- target moving off it) is the trigger. Second argument: the new target GUID.
+local softInteractFrame = CreateFrame("Frame")
+local softInteractEventOk = pcall(softInteractFrame.RegisterEvent, softInteractFrame, "PLAYER_SOFT_INTERACT_CHANGED")
+softInteractFrame:SetScript("OnEvent", function(_, _, _, newTargetGUID)
+    if not channeling then return end
+    DoubleClickCastEngine.refreshBobber(newTargetGUID)
+end)
+
+-- Fallback for a client without that event: look at the soft target a few times a second.
 local watcher = CreateFrame("Frame")
 local elapsedAcc = 0
 watcher:Hide()
@@ -296,16 +326,17 @@ watcher:SetScript("OnUpdate", function(self, dt)
     if elapsedAcc < 0.15 then return end
     elapsedAcc = 0
     if not channeling then self:Hide() return end
-    local before = ns.bobberFound
-    DoubleClickCastEngine.refreshActiveView()
-    if before ~= ns.bobberFound then ns:PublishAddonEvent("AM_BOBBER_CHANGED") end
+    DoubleClickCastEngine.refreshBobber(nil)
 end)
 
 ns:SubscribeAddonEvent("UNIT_SPELLCAST_CHANNEL_START", function(unit, _, spellID)
     if ns.CoerceSafeString(unit) ~= "player" or not DoubleClickCastEngine.hasFishingSpell(spellID) then return end
     channeling = true
     DoubleClickCastEngine.refreshActiveView()
-    watcher:Show()
+    if not softInteractEventOk then
+        elapsedAcc = 0
+        watcher:Show()
+    end
     ns:PublishAddonEvent("AM_BOBBER_CHANGED")
 end)
 
