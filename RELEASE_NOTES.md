@@ -1,9 +1,7 @@
-# v2.0.9
+# v2.0.10
 
 ### 한국어
-- 툴팁 아래의 애드온 이름 표시를 작은 회색 글자로 통일했습니다.
-- 메뉴와 확인 창에 어느 애드온의 것인지 표시합니다.
+- 세계지도를 열어 둔 채 전투 중에 지역을 바꾸거나 지도를 열 때 나던 "애드온 동작 차단" 오류를 수정했습니다.
 
 ### English
-- The addon name at the bottom of tooltips is now small gray text.
-- Menus and confirmation popups now show which addon they belong to.
+- Fixed the "action blocked" error when the world map was opened or changed zones during combat.
