@@ -17,8 +17,6 @@ function ns:SetFishFilter(itemID)
     ns:PublishAddonEvent("AM_SETTINGS_CHANGED", "filterFish")
 end
 
-local pendingMap
-
 function WorldMapFilterButton.moveMap(mapID, open)
     if open and not WorldMapFrame:IsShown() then
         if OpenWorldMap then OpenWorldMap(mapID) else ToggleWorldMap() end
@@ -27,18 +25,8 @@ function WorldMapFilterButton.moveMap(mapID, open)
 end
 
 function ns:GoToMap(mapID, open)
-    if InCombatLockdown() then
-        pendingMap = { mapID = mapID, open = open }
-        return
-    end
     WorldMapFilterButton.moveMap(mapID, open)
 end
-
-ns:SubscribeAddonEvent("PLAYER_REGEN_ENABLED", function()
-    local anchorTarget = pendingMap
-    pendingMap = nil
-    if anchorTarget then WorldMapFilterButton.moveMap(anchorTarget.mapID, anchorTarget.open) end
-end)
 
 function ns:ShowFishOnMap(itemID, mapID)
     ns:SetFishFilter(itemID)
