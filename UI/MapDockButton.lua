@@ -402,15 +402,10 @@ ns:SubscribeAddonEvent("AM_DB_READY", function()
         WorldMapFilterButton.refreshLabel()
         ns:UpdateMapLegend()
     end
-    -- map changes come in through a map data provider (the map's own
-    -- extension point) rather than a post-hook on the map's OnMapChanged
-    if WorldMapFrame.AddDataProvider and MapCanvasDataProviderMixin and CreateFromMixins then
-        local provider = CreateFromMixins(MapCanvasDataProviderMixin)
-        provider.RemoveAllData = function() end
-        provider.RefreshAllData = function() end
-        provider.OnMapChanged = onMapChanged
-        WorldMapFrame:AddDataProvider(provider)
-    elseif WorldMapFrame.OnMapChanged then
+    -- map changes come in through post-hooks on the map. A map data provider would run
+    -- inside the map's own update loop, and the game's pins made after it in that
+    -- loop are then blocked in combat (SetPassThroughButtons).
+    if WorldMapFrame.OnMapChanged then
         hooksecurefunc(WorldMapFrame, "OnMapChanged", onMapChanged)
     end
     WorldMapFrame:HookScript("OnShow", function()

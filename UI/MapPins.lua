@@ -155,6 +155,28 @@ function EzWoW_SmartFishingPinMixin:OnMouseClickAction(button)
     end
 end
 
+-- Our map layer runs from post-hooks on the map instead of being registered
+-- as a map data provider: a provider runs inside the map's own update loop,
+-- and the game's pins made after it in that loop are then blocked in combat
+-- (SetPassThroughButtons). The layer keeps the provider method names.
+local function attachMapLayer(map, layer)
+    layer.owningMap = map
+    layer.GetMap = function() return map end
+    local function run(method, ...)
+        local fn = layer[method]
+        if type(fn) == "function" then fn(layer, ...) end
+    end
+    hooksecurefunc(map, "OnMapChanged", function() run("OnMapChanged") end)
+    for _, method in ipairs({ "OnCanvasScaleChanged", "OnCanvasSizeChanged", "SetGlobalAlpha" }) do
+        if type(map[method]) == "function" then
+            local target = method == "SetGlobalAlpha" and "OnGlobalAlphaChanged" or method
+            hooksecurefunc(map, method, function() run(target) end)
+        end
+    end
+    map:HookScript("OnShow", function() run("OnShow"); run("RefreshAllData", true) end)
+    map:HookScript("OnHide", function() run("OnHide") end)
+end
+
 local MapDataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
 
 function MapDataProvider:RemoveAllData()
@@ -209,7 +231,9 @@ function ns:RefreshPins()
 end
 
 ns:SubscribeAddonEvent("AM_DB_READY", function()
-    WorldMapFrame:AddDataProvider(MapDataProvider)
+    if MapDataProvider.owningMap then return end
+    attachMapLayer(WorldMapFrame, MapDataProvider)
+    ns:RefreshPins()
 end)
 ns:SubscribeAddonEvent("AM_DATA_CHANGED", function() ns:RefreshPins() end)
 local PIN_KEYS = { showPins = true, filterFish = true, pinScale = true, showPools = true, showShared = true, showExpected = true }
