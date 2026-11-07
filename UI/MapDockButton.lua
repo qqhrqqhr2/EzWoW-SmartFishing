@@ -169,6 +169,8 @@ function WorldMapFilterButton.launchMenu(owner)
             ns.settings.showPins = false
             ns:PublishAddonEvent("AM_SETTINGS_CHANGED", "showPins")
         end)
+        root:CreateDivider()
+        root:CreateTitle("|cff8c8c8cEzWoW - Smart Fishing|r")
     end)
 end
 ns.OpenFishMenu = WorldMapFilterButton.launchMenu
@@ -251,7 +253,9 @@ function WorldMapFilterButton.buildButton()
         self:SetBackdropBorderColor(unpack(StyleService.accent))
         GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
         GameTooltip:AddLine(L["선택 해제 (모든 물고기 보기)"], 1, 1, 1)
+        GameTooltip:AddDoubleLine(" ", "EzWoW - Smart Fishing", 0, 0, 0, 0.5, 0.5, 0.5)
         GameTooltip:Show()
+        if _G.EzWoWTooltipTagSizer and _G.EzWoWTooltipTagSizer.Refit then pcall(_G.EzWoWTooltipTagSizer.Refit, GameTooltip) end
     end)
     b.clear:SetScript("OnLeave", function(self)
         self.t:SetTextColor(unpack(StyleService.muted))

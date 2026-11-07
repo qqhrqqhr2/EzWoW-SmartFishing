@@ -42,14 +42,14 @@ end
 
 function SettingsDialog.definePopups()
     StaticPopupDialogs["WOWSMARTFISHING_RELOAD"] = {
-        text = L["언어를 바꾸려면 UI를 다시 불러와야 해요. 지금 다시 불러올까요?"],
+        text = L["언어를 바꾸려면 UI를 다시 불러와야 해요. 지금 다시 불러올까요?"] .. "\n\n|cff8c8c8cEzWoW - Smart Fishing|r",
         button1 = L["다시 불러오기"], button2 = L["나중에"],
         OnAccept = function() ReloadUI() end,
         timeout = 0, whileDead = true, hideOnEscape = true, preferredIndex = 3,
     }
 
     StaticPopupDialogs["EZWOWSMARTFISHING_RESET_ZONE"] = {
-        text = L["현재 지역의 낚시 지점 기록을 지울까요?"],
+        text = L["현재 지역의 낚시 지점 기록을 지울까요?"] .. "\n\n|cff8c8c8cEzWoW - Smart Fishing|r",
         button1 = YES, button2 = NO,
         OnAccept = function()
             local mapID = C_Map.GetBestMapForUnit("player")
@@ -61,7 +61,7 @@ function SettingsDialog.definePopups()
     }
 
     StaticPopupDialogs["EZWOWSMARTFISHING_RESET_ALL"] = {
-        text = L["모든 낚시 기록(지점, 기록, 도감, 세션)을 지울까요?\n되돌릴 수 없어요."],
+        text = L["모든 낚시 기록(지점, 기록, 도감, 세션)을 지울까요?\n되돌릴 수 없어요."] .. "\n\n|cff8c8c8cEzWoW - Smart Fishing|r",
         button1 = YES, button2 = NO,
         OnAccept = function()
             local db = ns.db
@@ -77,7 +77,7 @@ function SettingsDialog.definePopups()
     }
 
     StaticPopupDialogs["EZWOWSMARTFISHING_RESET_SHARED"] = {
-        text = L["다른 플레이어에게 공유받은 낚시 기록을 모두 지울까요?"],
+        text = L["다른 플레이어에게 공유받은 낚시 기록을 모두 지울까요?"] .. "\n\n|cff8c8c8cEzWoW - Smart Fishing|r",
         button1 = YES, button2 = NO,
         OnAccept = function() ns:ClearShared() end,
         timeout = 0, whileDead = true, hideOnEscape = true, preferredIndex = 3,

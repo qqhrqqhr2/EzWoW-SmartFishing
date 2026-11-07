@@ -134,9 +134,9 @@ function EzWoW_SmartFishingPinMixin:OnMouseEnter()
         end
     end
     
-    GameTooltip:AddLine(" ")
-    GameTooltip:AddLine("|T" .. StyleService.ICON .. ":12:12|t EzWoW - Smart Fishing", 0.27, 0.78, 0.88)
+    GameTooltip:AddDoubleLine(" ", "EzWoW - Smart Fishing", 0, 0, 0, 0.5, 0.5, 0.5)
     GameTooltip:Show()
+    if _G.EzWoWTooltipTagSizer and _G.EzWoWTooltipTagSizer.Refit then pcall(_G.EzWoWTooltipTagSizer.Refit, GameTooltip) end
 end
 
 function EzWoW_SmartFishingPinMixin:OnMouseLeave()
