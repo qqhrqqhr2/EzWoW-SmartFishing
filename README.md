@@ -15,11 +15,11 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 
 ### 개요
 
-낚시를 편하게 해 주는 올인원 애드온입니다. 낚싯대를 들고 **키 하나(기본 스페이스)**로 던지고, 찌가 물면 같은 키로 건져 올립니다. 미끼 자동 사용, 낚싯대 ↔ 평소 무기 원클릭 교체, 실시간 세션 HUD, 낚시 일지 · 어종 도감, 월드맵 낚시 지점 · 물고기 떼 · 지역별 어종 확률, 파티·길드 기록 공유까지 제공합니다.
+낚시를 편하게 해 주는 올인원 애드온입니다. 낚싯대를 들고 **키 하나(기본 스페이스)**로 던지고, 찌가 물면 같은 키로 건져 올립니다. 미끼 자동 사용, 낚싯대 ↔ 평소 무기 원클릭 교체, 실시간 세션 HUD와 찌 소리를 키우는 낚시 소리 패널, 기다리는 동안 즐기는 미니게임, 낚시 일지 · 어종 도감, 월드맵 낚시 지점 · 물고기 떼 · 지역별 어종 확률, 물고기 툴팁, 파티·길드 기록 공유까지 제공합니다.
 
 ### 화면 미리보기
 
-![낚시 HUD와 기록 창](docs/images/ui_ko.png)
+![낚시 HUD, 기록 창, 세계지도](docs/images/ui_ko.png)
 
 ![설정창](docs/images/settings_ko.png)
 
@@ -35,12 +35,14 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 
 | 번호 | 부분 | 설명 |
 |---|---|---|
-| ① | 세션 HUD | 낚싯대를 들면 나타납니다. **현재 숙련(+장비 보너스) / 지역 권장 숙련**, 미끼 남은 시간, 세션 시간 · 낚은 수 · 성공률 · 시간당 어획량, 마지막으로 낚은 물고기를 보여 줍니다. 마우스로 끌어 옮길 수 있습니다. |
-| ② | 낚시 종료 | 세션을 마치고 원래 주무기·보조무기로 돌아갑니다. |
-| ③ | 기록 창 탭 (`/ezsf`) | **세션**(이번 세션 통계) · **기록**(최근에 낚은 물고기와 장소 · 시각) · **도감**(처음 낚은 날 · 장소 · 마리 수) · **지역**(현재 지역 어종과 기대 확률, “지도 열기”) |
-| ④ | 세션 통계 | 시간 · 던짐 · 낚음 · 놓침 · 성공률 · 시간당과 어종별 비율. **새 세션**으로 다시 시작합니다. |
-| ⑤ | 월드맵 어종 범례 | 세계지도 왼쪽 아래 **4번째 도킹 버튼**으로 펼칩니다. 현재 지역의 바닷물·민물 어종과 확률을 보여 주고, **물고기 선택**으로 특정 물고기가 나오는 **모든 지역과 확률**을 찾습니다. |
-| ⑥ | 지도 핀 | 내가 물고기를 낚은 지점(가장 많이 낚은 어종 아이콘)과 내장된 **물고기 떼 출현 지점**을 표시합니다. 공유받은 지점도 표시할 수 있습니다. |
+| ① | 세션 HUD | 낚싯대를 들면 나타납니다. **현재 숙련(장비 보너스 포함) · 지역 권장 숙련**, 미끼 남은 시간, 세션 시간 · 낚은 수 · 성공률 · 시간당 어획량, 마지막으로 낚은 물고기를 보여 줍니다. 클릭: 기록 창 · 우클릭: 설정 · 드래그: 이동. |
+| ② | 미니게임 · 낚시 종료 | **미니게임**: 찌를 기다리는 동안 미니게임 창(지뢰찾기 · 짝 맞추기 · 퍼즐 맞추기 · 솔리테어)을 엽니다. **낚시 종료**: 세션을 마치고 원래 주무기·보조무기로 돌아갑니다. |
+| ③ | 낚시 소리 패널 | 낚시를 던져 기다리는 동안만 효과음을 키웁니다. `+`/`-`로 크기, 스피커 버튼으로 켜기/끄기. |
+| ④ | 기록 창 탭 (`/ezsf`) | **세션**(이번 세션 통계) · **기록**(최근에 낚은 물고기와 장소 · 시각, 클릭하면 지도에서 보기) · **도감**(처음 낚은 날 · 장소 · 마리 수) · **지역**(현재 지역 어종과 기대 확률, 권장 숙련, “지도 열기”) |
+| ⑤ | 세션 통계 | 시간 · 던짐 · 낚음 · 놓침 · 성공률 · 시간당과 어종별 비율. **새 세션**으로 다시 시작합니다. |
+| ⑥ | 물고기 툴팁 | 잘 잡히는 지역 3곳과 확률(권장 숙련), 물고기 떼가 나오는 지역, 내가 낚은 수. |
+| ⑦ | 월드맵 어종 범례 | 세계지도 왼쪽 아래 **도킹 버튼**으로 펼칩니다. 현재 지역의 일반 낚시 어종과 확률, **핀 숨김** · **설정** 버튼. **물고기 선택**으로 특정 물고기의 지점과 그 물고기가 나오는 **모든 지역과 확률**을 찾습니다(대륙 지도에서는 지역 순위). |
+| ⑧ | 지도 핀 | 내가 물고기를 낚은 지점(가장 많이 낚은 어종 아이콘), 내장된 **물고기 떼 출현 지점**(파란 테두리), 공유받은 지점(금색 테두리). |
 
 #### 원버튼 낚시 동작
 
@@ -64,20 +66,21 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 
 | 번호 | 항목 | 기본값 |
 |---|---|---|
-| ① | 언어 (자동 + 8개 언어) | 자동 |
+| ① | 언어 (자동 + 8개 언어, 목록에서 선택) | 자동 |
 | ① | 원버튼 낚시 · 자동 획득 · 미끼 자동 사용 · 찌 자동 인식 · 찌 인식 범위 넓히기 | 모두 켬 |
-| ① | 원버튼 키: 스페이스 · 마우스 휠 클릭 · 마우스 4번 · 마우스 5번 (또는 `/ezsf key 키`) | 스페이스 |
-| ② | 전투가 시작되면 무기로 교체 · 전투가 끝나면 낚싯대 다시 들기 | 켬 · 켬 |
-| ② | 버튼: 낚싯대 / 평소 무기 (바꾸기) · 낚시 기록 창 (/ezsf) | - |
-| ③ | 낚싯대를 들면 세션 창 표시 · 지도에 낚시 지점 표시 | 켬 |
-| ③ | 세계지도에 물고기 선택 버튼 표시 · 세계지도 버튼 좌하단 자동 정렬 | 켬 |
-| ③ | 아이템 툴팁에 잡히는 곳 표시 · 미니맵 버튼 표시 | 켬 |
-| ③ | 세계지도에 일반 낚시 어종 목록 표시 · 물고기 떼 출현 지점 표시 | 켬 |
-| ③ | 물고기가 나오는 지역과 확률 표시 · 처음 낚은 물고기 알림 | 켬 |
-| ④ | 세션 창 크기 70~150% · 지도 핀 크기 60~160% | 100% · 100% |
-| ⑤ | 낚은 위치를 길드·파티에 공유 · 다른 플레이어의 공유 받기 · 공유받은 위치 지도에 표시 | 켬 |
-| ⑤ | 내 낚시 기록 전체 보내기 / 현재 지역 낚시 지점 지우기 / 공유받은 기록 지우기 / 모든 낚시 기록 전부 지우기 (확인 창이 뜹니다) | - |
-| ⑥ | 세계지도 버튼 위치 · 아이콘 처음 위치로 · 후원하기 | - |
+| ② | 원버튼 키: 스페이스 · F · G · R · T · V · 마우스 휠 클릭 · 마우스 4번 · 마우스 5번 (클릭: 목록, 우클릭: 다음 키, 그 밖의 키는 `/ezsf key 키`) | 스페이스 |
+| ③ | 낚시 중 소리 키우기 · 음악·주변 소리 줄이기 | 켬 · 끔 |
+| ④ | 전투가 시작되면 무기로 교체 · 전투가 끝나면 낚싯대 다시 들기 | 켬 · 켬 |
+| ④ | 버튼: 낚싯대 / 평소 무기 (바꾸기) · 낚시 기록 창 (/ezsf) | - |
+| ⑤ | 낚싯대를 들면 세션 창 표시 · 지도에 낚시 지점 표시 | 켬 |
+| ⑤ | 세계지도에 물고기 선택 버튼 표시 · 세계지도 버튼 좌하단 자동 정렬 | 켬 |
+| ⑤ | 아이템 툴팁에 잡히는 곳 표시 · 미니맵 버튼 표시 | 켬 |
+| ⑤ | 세계지도에 일반 낚시 어종 목록 표시 · 물고기 떼 출현 지점 표시 | 켬 |
+| ⑤ | 물고기가 나오는 지역과 확률 표시 · 처음 낚은 물고기 알림 | 켬 |
+| ⑥ | 세션 창 크기 70~150% · 지도 핀 크기 60~160% | 100% · 100% |
+| ⑦ | 낚은 위치를 길드·파티에 공유 · 다른 플레이어의 공유 받기 · 공유받은 위치 지도에 표시 | 켬 |
+| ⑦ | 내 낚시 기록 전체 보내기 / 현재 지역 낚시 지점 지우기 / 공유받은 기록 지우기 / 모든 낚시 기록 전부 지우기 (확인 창이 뜹니다) | - |
+| ⑧ | 세계지도 버튼 위치 · 아이콘 처음 위치로 · 후원하기 | - |
 
 ### 명령어 (`/ezsf`, `/스마트낚시`)
 
@@ -90,7 +93,7 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 | `/ezsf lure` (`미끼`) · `/ezsf pins` (`핀`) · `/ezsf hud` | 자동 미끼 · 지도 핀 · 세션 HUD 켜기/끄기 |
 | `/ezsf pole` (`gear`, `장비`) | 가장 좋은 낚싯대 들기 / 원래 무기로 복귀 |
 | `/ezsf session` (`세션`) | 세션 통계 새로 시작 |
-| `/ezsf reset` · `/ezsf reset all` | 현재 지역 낚시 지점 지우기 · 모든 기록 지우기 |
+| `/ezsf reset` · `/ezsf reset all` | 현재 지역 낚시 지점 지우기 · 모든 지역 낚시 지점 지우기 |
 | `/ezsf lang <auto\|ko\|en\|de\|fr\|es\|ru\|cn\|tw>` | 표시 언어 변경 |
 | `/ezsf donate` (`후원`) | 후원 안내 |
 
@@ -106,11 +109,11 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 
 ### Overview
 
-An all-in-one fishing helper. With a pole equipped, **one key (Space by default)** casts, and the same key reels in when the bobber splashes. It also auto-applies lures, swaps pole ↔ weapons in one click, shows a live session HUD, keeps a fishing log and journal, marks fishing spots, fish schools and per-zone catch chances on the World Map, and shares catches with your party and guild.
+An all-in-one fishing helper. With a pole equipped, **one key (Space by default)** casts, and the same key reels in when the bobber splashes. It also auto-applies lures, swaps pole ↔ weapons in one click, shows a live session HUD with a fishing sound panel that makes the splash easy to hear, offers mini games while you wait, keeps a fishing log and journal, marks fishing spots, fish schools and per-zone catch chances on the World Map, adds catch zones to fish tooltips, and shares catches with your party and guild.
 
 ### Screenshots
 
-![Fishing HUD and log](docs/images/ui_en.png)
+![Fishing HUD, log window and World Map](docs/images/ui_en.png)
 
 ![Settings window](docs/images/settings_en.png)
 
@@ -126,12 +129,14 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 
 | No. | Part | Description |
 |---|---|---|
-| ① | Session HUD | Appears when you equip a pole: **your skill (+gear bonus) vs. the zone's recommended skill**, lure timer, session time, catches, success rate, catches per hour and your last catch. Drag to move. |
-| ② | Stop fishing | Ends the session and puts your main/off-hand weapons back on. |
-| ③ | Log tabs (`/ezsf`) | **Session** (this session) · **Log** (recent catches with place and time) · **Journal** (first catch date, place, count) · **Zone** (fish and expected chances here, “Open map”) |
-| ④ | Session stats | Time, casts, caught, missed, success, per hour and share per fish. **New session** restarts. |
-| ⑤ | World Map fish legend | Opened from the **4th dock button** at the bottom-left of the World Map. Shows coastal/inland fish and chances for the zone; **Filter fish** lists **every zone and chance** for one fish. |
-| ⑥ | Map pins | Your catch spots (icon of the most-caught fish) and built-in **fish school spawn points**. Shared spots can be shown too. |
+| ① | Session HUD | Appears when you equip a pole: **your skill (with gear bonus) vs. the zone's recommended skill**, lure timer, session time, catches, success rate, catches per hour and your last catch. Click: log · right-click: settings · drag: move. |
+| ② | Mini games · Stop fishing | **Mini games**: opens the mini games (Minesweeper, Memory, Sliding Puzzle, Solitaire) while you wait for a bite. **Stop fishing**: ends the session and puts your main/off-hand weapons back on. |
+| ③ | Fishing sound panel | Turns sound effects up only while your line is out. `+`/`-` set the level, the speaker button toggles it. |
+| ④ | Log tabs (`/ezsf`) | **Session** (this session) · **Log** (recent catches with place and time; click to see it on the map) · **Journal** (first catch date, place, count) · **Zone** (fish and expected chances here, recommended skill, “Open map”) |
+| ⑤ | Session stats | Time, casts, caught, missed, success, per hour and share per fish. **New session** restarts. |
+| ⑥ | Fish tooltip | The three best zones with chances (and recommended skill), zones with fish schools, and how many you have caught. |
+| ⑦ | World Map fish legend | Opened from the **dock button** at the bottom-left of the World Map. Shows open-water fish and chances for the zone, with **Hide pins** and **Settings** buttons; **Filter fish** shows the spots of one fish and **every zone and chance** for it (continent maps rank the zones). |
+| ⑧ | Map pins | Your catch spots (icon of the most-caught fish), built-in **fish school spawn points** (blue rim) and shared spots (gold rim). |
 
 #### How one-button fishing works
 
@@ -155,20 +160,21 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 
 | No. | Option | Default |
 |---|---|---|
-| ① | Language (Auto + 8 languages) | Auto |
+| ① | Language (Auto + 8 languages, picked from a list) | Auto |
 | ① | One-button fishing · Auto loot · Auto apply lure · Auto-detect bobber · Widen bobber detection | All on |
-| ① | One-button key: Space · middle mouse · mouse 4 · mouse 5 (or `/ezsf key KEY`) | Space |
-| ② | Swap to weapons when combat starts · Re-equip pole after combat | On · On |
-| ② | Buttons: Fishing pole / weapons (Swap) · Fishing log (/ezsf) | - |
-| ③ | Show session panel when a pole is equipped · Show fishing spots on the map | On |
-| ③ | Show fish picker button on the world map · Auto-align world map button (bottom-left) | On |
-| ③ | Show where to catch in item tooltips · Show minimap button | On |
-| ③ | Show open-water fish list on the world map · Show fish school spawn points | On |
-| ③ | Show zones and chances for a fish · Alert for new fish | On |
-| ④ | Session panel size 70–150% · Map pin size 60–160% | 100% · 100% |
-| ⑤ | Share catches with guild/party · Receive shared catches · Show shared spots on the map | On |
-| ⑤ | Send all my records / Clear spots in this zone / Clear shared records / Clear all fishing data (asks to confirm) | - |
-| ⑥ | Reset world map button & icon position · Support | - |
+| ② | One-button key: Space · F · G · R · T · V · middle mouse · mouse 4 · mouse 5 (click: list, right-click: next key, any other key with `/ezsf key KEY`) | Space |
+| ③ | Louder sound while fishing · Mute music & ambience | On · Off |
+| ④ | Swap to weapons when combat starts · Re-equip pole after combat | On · On |
+| ④ | Buttons: Fishing pole / weapons (Swap) · Fishing log (/ezsf) | - |
+| ⑤ | Show session panel when a pole is equipped · Show fishing spots on the map | On |
+| ⑤ | Show fish picker button on the world map · Auto-align world map button (bottom-left) | On |
+| ⑤ | Show where to catch in item tooltips · Show minimap button | On |
+| ⑤ | Show open-water fish list on the world map · Show fish school spawn points | On |
+| ⑤ | Show zones and chances for a fish · Alert for new fish | On |
+| ⑥ | Session panel size 70–150% · Map pin size 60–160% | 100% · 100% |
+| ⑦ | Share catches with guild/party · Receive shared catches · Show shared spots on the map | On |
+| ⑦ | Send all my records / Clear spots in this zone / Clear shared records / Clear all fishing data (asks to confirm) | - |
+| ⑧ | Reset world map button & icon position · Support | - |
 
 ### Slash commands (`/ezsf`, `/스마트낚시`)
 
@@ -181,7 +187,7 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 | `/ezsf lure` · `/ezsf pins` · `/ezsf hud` | Toggle auto lure · map pins · session HUD |
 | `/ezsf pole` (`gear`) | Equip the best pole / go back to weapons |
 | `/ezsf session` | Start a new session |
-| `/ezsf reset` · `/ezsf reset all` | Clear spots in this zone · clear all data |
+| `/ezsf reset` · `/ezsf reset all` | Clear spots in this zone · clear spots in all zones |
 | `/ezsf lang <auto\|ko\|en\|de\|fr\|es\|ru\|cn\|tw>` | Change display language |
 | `/ezsf donate` | Support info |
 
