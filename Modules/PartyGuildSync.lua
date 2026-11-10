@@ -128,6 +128,54 @@ ns:SubscribeAddonEvent("AM_CATCH", function(mapID, x, y, items)
     end
 end)
 
+-----------------------------------------------------------------------------
+-- Server-wide sharing through the EzWoW shared channel (Libs/EzWoWShare,
+-- kind "F"): "mapID,x,y,itemID,count" with x and y in thousandths. The same
+-- settings apply as for the party and guild (share / receive catches).
+-----------------------------------------------------------------------------
+local refreshQueued = false
+local function queueRefresh()
+    if refreshQueued then return end
+    refreshQueued = true
+    C_Timer.After(1, function()
+        refreshQueued = false
+        ns:PublishAddonEvent("AM_DATA_CHANGED")
+    end)
+end
+
+if ns.Share and ns.Share.RegisterKind then
+    ns.Share.RegisterKind("F", {
+        own = function()
+            local out = {}
+            if not (ns.db and ns.settings and ns.settings.shareCatches) then return out end
+            for mapID, spots in pairs(ns.db.spots or {}) do
+                if type(mapID) == "number" and mapID ~= 0 and type(spots) == "table" then
+                    for _, spot in ipairs(spots) do
+                        for itemID, count in pairs(spot.fish or {}) do
+                            if type(itemID) == "number" and type(count) == "number" and count > 0 then
+                                out[#out + 1] = string.format("%d,%d,%d,%d,%d", mapID, math.floor(spot.x * 1000 + 0.5),
+                                    math.floor(spot.y * 1000 + 0.5), itemID, math.min(count, 100000))
+                            end
+                        end
+                    end
+                end
+            end
+            return out
+        end,
+        receive = function(body)
+            if not (ns.db and ns.settings and ns.settings.receiveShared) then return false end
+            local m, x, y, item, count = body:match("^(%d+),(%d+),(%d+),(%d+),(%d+)$")
+            m, x, y = PartyGuildSpotSync.parseFiniteNumber(m, 1, 100000), PartyGuildSpotSync.parseFiniteNumber(x, 0, 1000),
+                PartyGuildSpotSync.parseFiniteNumber(y, 0, 1000)
+            item, count = PartyGuildSpotSync.parseFiniteNumber(item, 1, 1000000), PartyGuildSpotSync.parseFiniteNumber(count, 1, 100000)
+            if not (m and x and y and item and count) then return false end
+            PartyGuildSpotSync.addShared(m, x / 1000, y / 1000, item, count, true)
+            queueRefresh()
+            return true
+        end,
+    })
+end
+
 function ns:SendAllRecords()
     if #PartyGuildSpotSync.resolveChannels() == 0 then
         ns:Print(L["길드나 파티에 있어야 기록을 보낼 수 있어요."])

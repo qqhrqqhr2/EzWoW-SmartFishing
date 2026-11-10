@@ -3,6 +3,9 @@
 -- UI/MapDockButton.lua : WorldMap Dock Button & Fish Filter Dropdown Menu
 --===========================================================================
 local ADDON, ns = ...
+-- frames made on the World Map are made without a parent and put in after
+-- (Libs/EzWoWGamePad MakeFrame: keeps the game's gamepad cursor untainted)
+local CreateFrame = (ns.GamePad and ns.GamePad.MakeFrame) or CreateFrame
 local type, pairs, ipairs, tonumber, tostring, select, pcall = type, pairs, ipairs, tonumber, tostring, select, pcall
 
 local WorldMapFilterButton = ns.WorldMapFilterButton or {}
@@ -18,6 +21,9 @@ function ns:SetFishFilter(itemID)
 end
 
 function WorldMapFilterButton.moveMap(mapID, open)
+    -- with the gamepad on, a map opened or moved by addon code taints the
+    -- gamepad navigation (Libs/EzWoWGamePad): left to the player
+    if ns.GamePad and ns.GamePad.IsActive() then return end
     if open and not WorldMapFrame:IsShown() then
         if OpenWorldMap then OpenWorldMap(mapID) else ToggleWorldMap() end
     end
@@ -196,7 +202,9 @@ end
 
 function WorldMapFilterButton.buildButton()
     local container = WorldMapFrame:GetCanvasContainer()
-    local b = CreateFrame("Button", "EzWoW_SmartFishingMapButton", container)
+    -- made on the map window and anchored to the canvas: a frame inside the
+    -- canvas makes the map scroll when a gamepad cursor moves onto it
+    local b = CreateFrame("Button", "EzWoW_SmartFishingMapButton", WorldMapFrame)
     b:SetSize(28, 28)
     b:SetFrameLevel(container:GetFrameLevel() + 500)
     b:RegisterForDrag("LeftButton")

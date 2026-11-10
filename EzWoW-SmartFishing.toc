@@ -23,13 +23,15 @@
 ## Version: 2.0.11
 ## Category: EzWoW
 ## X-License: GPL-3.0
-## SavedVariables: EzWoW_SmartFishingDB
+## SavedVariables: EzWoW_SmartFishingDB, EzWoW_SharedData
 ## IconTexture: Interface\AddOns\EzWoW-SmartFishing\Media\icon
 ## X-Website: https://github.com/qqhrqqhr2/EzWoW-SmartFishing
 ## X-Donate: https://buymeacoffee.com/qqhrqqhr2
 ## X-Curse-Project-ID: 1743389
 ## AddonCompartmentFunc: EzWoW_SmartFishing_OnAddonCompartmentClick
 
+Libs\EzWoWGamePad\GamePad.lua
+Libs\EzWoWShare\Share.lua
 Core\Locales.lua
 Core\UIKit.lua
 Core\Init.lua

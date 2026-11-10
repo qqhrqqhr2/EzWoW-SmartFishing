@@ -3,6 +3,9 @@
 -- UI/MapLegend.lua : WorldMap Zone Fish Drop-Rate & Pool Legend Overlay
 --===========================================================================
 local ADDON, ns = ...
+-- frames made on the World Map are made without a parent and put in after
+-- (Libs/EzWoWGamePad MakeFrame: keeps the game's gamepad cursor untainted)
+local CreateFrame = (ns.GamePad and ns.GamePad.MakeFrame) or CreateFrame
 local type, pairs, ipairs, tonumber, tostring, select, pcall = type, pairs, ipairs, tonumber, tostring, select, pcall
 
 local ZoneDropRateLegend = ns.ZoneDropRateLegend or {}
@@ -64,7 +67,7 @@ end
 
 function ZoneDropRateLegend.buildLegend(anchor)
     local container = WorldMapFrame:GetCanvasContainer()
-    local windowFrame = CreateFrame("Frame", "EzWoW_SmartFishingMapLegend", container, "BackdropTemplate")
+    local windowFrame = CreateFrame("Frame", "EzWoW_SmartFishingMapLegend", WorldMapFrame, "BackdropTemplate")
     StyleService:Panel(windowFrame, StyleService.bg, StyleService.border)
     windowFrame:SetWidth(frameWidth)
     windowFrame:SetFrameLevel(anchor:GetFrameLevel() + 10)
