@@ -57,6 +57,16 @@ An all-in-one fishing helper for WoW Forever. With a pole equipped, one key (Spa
 - The mini games are the same as in **EzWoW - Flight Map**.
 - When **EzWoW - Tooltip** already shows where an item comes from, the fish tooltip only adds your catch count.
 
+## Gamepad
+- With the gamepad UI on, EzWoW windows work with a gamepad: D-pad to move, A (✕) to press, X (□) for right-click, LB/RB to scroll, B (○) to close. A key guide in your pad's button style shows under the window.
+- With no game window open, press **View (Back) / Create** to move to the EzWoW frames on screen. Press it again or B to go back.
+- On the World Map, View / Create moves to the EzWoW icons at the bottom left.
+- To use another button: Key Bindings > AddOns > EzWoW > "Gamepad: move to / leave the EzWoW frames" (with EzWoW-MapFinder installed).
+
+## Record sharing
+- Shared by all EzWoW addons and **on by default**: quest NPCs, rare monster sightings, item drops and gathering spots you have seen yourself are shared with other EzWoW users.
+- `/ezshare on` / `off`, `/ezshare channel on` / `off`, `/ezshare status`
+
 ## Commands
 - `/ezsf` or `/스마트낚시` — fishing log & journal
 - `/ezsf config` — settings
@@ -124,6 +134,16 @@ WoW Forever용 올인원 낚시 애드온입니다. 낚싯대를 들고 키 하�
 ## 다른 EzWoW 애드온과 함께 쓰기
 - 미니게임은 **EzWoW - Flight Map**의 미니게임과 같습니다.
 - **EzWoW - Tooltip**이 아이템 출처를 이미 보여 주면, 물고기 툴팁에는 내가 낚은 수만 덧붙입니다.
+
+## 게임패드
+- 게임패드 UI를 켜면 EzWoW 창을 패드로 다룰 수 있습니다. 방향키로 이동, A(✕)로 누르기, X(□)로 오른쪽 클릭, LB/RB로 스크롤, B(○)로 닫기입니다. 창 아래에 연결된 패드 모양으로 키 안내가 나옵니다.
+- 블리자드 창이 열려 있지 않을 때 **보기(Back) / Create 버튼**을 누르면 화면의 EzWoW 프레임으로 이동합니다. 다시 누르거나 B를 누르면 돌아갑니다.
+- 세계지도에서는 보기 / Create 버튼으로 왼쪽 아래 EzWoW 아이콘에 갑니다.
+- 다른 버튼을 쓰려면: 설정 > 단축키 > 애드온 > EzWoW > "게임패드: EzWoW 창으로 이동/돌아가기" (EzWoW-MapFinder 설치 시)
+
+## 기록 공유
+- 모든 EzWoW 애드온이 함께 쓰며 **기본으로 켜져 있습니다**. 직접 확인한 퀘스트 NPC, 희귀 몬스터 목격, 아이템 드롭, 채집 위치를 다른 EzWoW 사용자와 나눕니다.
+- `/ezshare on` / `off` (또는 `/공유`), `/ezshare channel on` / `off`, `/ezshare status`
 
 ## 명령어
 - `/ezsf` 또는 `/스마트낚시` — 낚시 기록 · 도감 창
