@@ -158,3 +158,9 @@ WoW Forever용 올인원 낚시 애드온입니다. 낚싯대를 들고 키 하�
 미니맵 버튼: 좌클릭 낚싯대/무기 교체 · 우클릭 설정 · 드래그 이동
 
 지원 언어: English, 한국어, Deutsch, Français, Español, Русский, 简体中文, 繁體中文.
+
+---
+
+**Support:** If you find this addon useful, you can support its development. [Buy Me a Coffee ☕](https://buymeacoffee.com/qqhrqqhr2)
+
+**후원:** 애드온이 도움이 되셨다면 개발 후원으로 응원해 주세요. [Buy Me a Coffee ☕](https://buymeacoffee.com/qqhrqqhr2)
