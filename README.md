@@ -76,7 +76,7 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 | ⑤ | 세계지도에 일반 낚시 어종 목록 표시 · 물고기 떼 출현 지점 표시 | 켬 |
 | ⑤ | 물고기가 나오는 지역과 확률 표시 · 처음 낚은 물고기 알림 | 켬 |
 | ⑥ | 세션 창 크기 70~150% · 지도 핀 크기 60~160% | 100% · 100% |
-| ⑦ | 낚은 위치를 길드·파티에 공유 · 다른 플레이어의 공유 받기 · 공유받은 위치 지도에 표시 | 켬 |
+| ⑦ | 낚은 위치를 다른 사용자와 공유 · 다른 플레이어의 공유 받기 · 공유받은 위치 지도에 표시 | 켬 |
 | ⑦ | 내 낚시 기록 전체 보내기 / 현재 지역 낚시 지점 지우기 / 공유받은 기록 지우기 / 모든 낚시 기록 전부 지우기 (확인 창이 뜹니다) | - |
 | ⑧ | 세계지도 버튼 위치 · 아이콘 처음 위치로 · 후원하기 | - |
 
@@ -179,7 +179,7 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 | ⑤ | Show open-water fish list on the world map · Show fish school spawn points | On |
 | ⑤ | Show zones and chances for a fish · Alert for new fish | On |
 | ⑥ | Session panel size 70–150% · Map pin size 60–160% | 100% · 100% |
-| ⑦ | Share catches with guild/party · Receive shared catches · Show shared spots on the map | On |
+| ⑦ | Share catches with other players · Receive shared catches · Show shared spots on the map | On |
 | ⑦ | Send all my records / Clear spots in this zone / Clear shared records / Clear all fishing data (asks to confirm) | - |
 | ⑧ | Reset world map button & icon position · Support | - |
 

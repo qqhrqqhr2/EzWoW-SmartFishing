@@ -23,7 +23,7 @@
 ## Version: 2.0.16
 ## Category: EzWoW
 ## X-License: GPL-3.0
-## SavedVariables: EzWoW_SmartFishingDB, EzWoW_SharedData
+## SavedVariables: EzWoW_SmartFishingDB, EzWoW_SharedData, EzWoW_ShareStore_SmartFishing
 ## IconTexture: Interface\AddOns\EzWoW-SmartFishing\Media\icon
 ## X-Website: https://github.com/qqhrqqhr2/EzWoW-SmartFishing
 ## X-Donate: https://buymeacoffee.com/qqhrqqhr2

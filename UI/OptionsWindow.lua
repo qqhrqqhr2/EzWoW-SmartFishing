@@ -188,8 +188,8 @@ function SettingsDialog.buildConfigWindow()
         newFishAlert       = "도감에 없던 물고기를 처음 낚으면 소리와 채팅으로 알려줍니다.",
         soundBoost         = "낚시를 던져 기다리는 동안만 효과음을 키워 찌 소리가 잘 들리게 합니다. 낚시가 끝나면 원래 음량으로 돌아갑니다.\n게임 창이 뒤에 있어도 소리가 나고, 크기는 낚시 창 옆 +/- 로 조절합니다.",
         soundQuiet         = "낚시하는 동안 배경음악과 주변 소리를 꺼서 찌 소리가 더 잘 들리게 합니다.",
-        shareCatches       = "같은 애드온을 쓰는 길드원·파티원에게 낚은 위치와 물고기를 보냅니다.",
-        receiveShared      = "길드원·파티원이 보낸 낚시 위치를 받아서 저장합니다.",
+        shareCatches       = "EzWoW 애드온을 쓰는 다른 사용자(길드·파티·서버 공유 채널)에게 낚은 위치와 물고기를 보냅니다.",
+        receiveShared      = "다른 사용자가 보낸 낚시 위치를 받아서 저장합니다.",
         showShared         = "공유받은 낚시 지점을 금색 테두리 핀으로 표시합니다.",
     }
 
@@ -438,7 +438,7 @@ function SettingsDialog.buildConfigWindow()
     createValueStepper(234, -458, "지도 핀 크기", "pinScale", 0.6, 1.6, 0.05, function(entryValue) return string.format("%d%%", entryValue * 100 + 0.5) end)
 
     createSectionDivider(-492, function() return L["공유"] .. " · " .. L["기록"] end)
-    createStyledCheckbox(18, -516, 180, "낚은 위치를 길드·파티에 공유", "shareCatches")
+    createStyledCheckbox(18, -516, 180, "낚은 위치를 다른 사용자와 공유", "shareCatches")
     createStyledCheckbox(232, -516, 180, "다른 플레이어의 공유 받기", "receiveShared")
     createStyledCheckbox(18, -542, 180, "공유받은 위치 지도에 표시", "showShared")
 
@@ -644,6 +644,11 @@ function ns:SetLanguage(code)
     end
     if _G.EzWoW_SmartFishingWindow and _G.EzWoW_SmartFishingWindow.Refresh and _G.EzWoW_SmartFishingWindow:IsShown() then
         _G.EzWoW_SmartFishingWindow:Refresh()
+    end
+    -- the journal window writes its fixed labels once, when it is first opened: once it
+    -- exists, reloading the interface brings them into the new language
+    if _G.EzWoW_SmartFishingWindow and StaticPopup_Show then
+        StaticPopup_Show("WOWSMARTFISHING_RELOAD")
     end
     ns:PublishAddonEvent("AM_DATA_CHANGED")
     ns:Print(L["애드온 언어: %s"]:format(code == "auto" and L["자동 (게임 언어)"] or ns.LANGUAGE_NAMES[code]))

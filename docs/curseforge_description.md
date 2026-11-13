@@ -48,7 +48,7 @@ An all-in-one fishing helper for WoW Forever. With a pole equipped, one key (Spa
 - Fish tooltips list the three best zones with chances, zones with fish schools, and how many you have caught.
 
 ### Sharing
-- Share catch spots with guild and party members who use the addon, receive theirs, and show them on the map.
+- Share catch spots with other players of the EzWoW addons (guild, party and the shared server channel), receive theirs, and show them on the map.
 - Send all your records at once, or clear this zone, shared records or everything (asks to confirm).
 
 ## Working with other EzWoW addons
@@ -124,7 +124,7 @@ WoW Forever용 올인원 낚시 애드온입니다. 낚싯대를 들고 키 하�
 - 물고기 툴팁에 잘 잡히는 지역 3곳과 확률, 물고기 떼가 나오는 지역, 내가 낚은 수를 표시합니다.
 
 ### 공유
-- 같은 애드온을 쓰는 길드원 · 파티원과 낚은 위치를 주고받아 지도에 표시합니다.
+- EzWoW 애드온을 쓰는 다른 사용자(길드 · 파티 · 서버 공유 채널)와 낚은 위치를 주고받아 지도에 표시합니다.
 - 내 기록 전체 보내기, 현재 지역 · 공유받은 기록 · 전체 기록 지우기(확인 창이 뜹니다).
 
 ## 다른 EzWoW 애드온과 함께 쓰기

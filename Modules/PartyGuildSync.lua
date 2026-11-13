@@ -15,6 +15,17 @@ local MAX_SPOTS_PER_MAP = 400
 local MAX_MSG = 240
 
 local playerName
+-- "name surname": on this client a sender can carry the surname instead of the realm
+local playerWithSurname
+
+-- this character's own messages come back from the guild and the group
+local function isOwnSender(sender)
+    if sender == playerName then return true end
+    local name = UnitName("player")
+    local short = Ambiguate and Ambiguate(sender, "none") or sender
+    if short == name or sender == name then return true end
+    return playerWithSurname ~= nil and (sender == playerWithSurname or short == playerWithSurname)
+end
 
 function PartyGuildSpotSync.resolveChannels()
     local itemList = {}
@@ -62,7 +73,7 @@ function PartyGuildSpotSync.addShared(mapID, x, y, itemID, count, merge)
     end
     local spot = PartyGuildSpotSync.locateSpot(spots, x, y)
     if not spot then
-        if #spots >= MAX_SPOTS_PER_MAP then return end
+        if #spots >= MAX_SPOTS_PER_MAP then return false end
         spot = { x = x, y = y, n = 0, fish = {} }
         spots[#spots + 1] = spot
     end
@@ -74,6 +85,8 @@ function PartyGuildSpotSync.addShared(mapID, x, y, itemID, count, merge)
     end
     spot.n = spot.n + math.max(0, spot.fish[itemID] - before)
     spot.last = time()
+    -- true when the record added something (a resend of the same count adds nothing)
+    return spot.fish[itemID] ~= before
 end
 
 function PartyGuildSpotSync.parseFiniteNumber(v, minV, maxV)
@@ -91,12 +104,30 @@ function PartyGuildSpotSync.allow(sender, n)
     return rowEntry.n <= 2000
 end
 
+-- A catch is sent to the guild and to the group: a player in both gets the same
+-- message twice within a moment. It is counted once.
+local recentCatch, recentCount = {}, 0
+local function seenCatch(key)
+    local now = GetTime()
+    if (recentCatch[key] or -100) > now - 3 then return true end
+    if recentCount > 200 then
+        recentCount = 0
+        for k, t in pairs(recentCatch) do
+            if now - t > 10 then recentCatch[k] = nil else recentCount = recentCount + 1 end
+        end
+    end
+    recentCatch[key] = now
+    recentCount = recentCount + 1
+    return false
+end
+
 function PartyGuildSpotSync.onMessage(prefix, msg, channel, sender)
     prefix, msg, sender = ns.CoerceSafeString(prefix), ns.CoerceSafeString(msg), ns.CoerceSafeString(sender)
     if prefix ~= PREFIX or not msg or not sender or not ns.db or not ns.settings.receiveShared then return end
-    if sender == playerName or Ambiguate(sender, "none") == UnitName("player") then return end
+    if isOwnSender(sender) then return end
     local kind, rest = msg:match("^(%u)|(.*)$")
     if kind == "C" then
+        if seenCatch(sender .. "\1" .. rest) then return end
         local matchRef, x, y, item, priorityQueue = strsplit("|", rest)
         matchRef, x, y = PartyGuildSpotSync.parseFiniteNumber(matchRef, 1, 100000), PartyGuildSpotSync.parseFiniteNumber(x, 0, 1000), PartyGuildSpotSync.parseFiniteNumber(y, 0, 1000)
         item, priorityQueue = PartyGuildSpotSync.parseFiniteNumber(item, 1, 1000000), PartyGuildSpotSync.parseFiniteNumber(priorityQueue, 1, 50)
@@ -169,7 +200,7 @@ if ns.Share and ns.Share.RegisterKind then
                 PartyGuildSpotSync.parseFiniteNumber(y, 0, 1000)
             item, count = PartyGuildSpotSync.parseFiniteNumber(item, 1, 1000000), PartyGuildSpotSync.parseFiniteNumber(count, 1, 100000)
             if not (m and x and y and item and count) then return false end
-            PartyGuildSpotSync.addShared(m, x / 1000, y / 1000, item, count, true)
+            if not PartyGuildSpotSync.addShared(m, x / 1000, y / 1000, item, count, true) then return false end
             queueRefresh()
             return true
         end,
@@ -218,9 +249,43 @@ function ns:SharedCount()
     return n
 end
 
+-- Earlier versions missed the "name surname" sender form, so this character's
+-- own catches came back from the guild and the group and were stored as shared
+-- spots too. Such a copy lies on an own spot and holds no fish beyond it: it is
+-- dropped once (a spot of another player there adds nothing the own one lacks).
+local function dropOwnEchoes(savedDB)
+    if savedDB.ownEchoesDropped then return end
+    savedDB.ownEchoesDropped = 1
+    for mapID, list in pairs(savedDB.shared) do
+        local own = type(savedDB.spots) == "table" and savedDB.spots[mapID]
+        if type(list) == "table" and type(own) == "table" then
+            for i = #list, 1, -1 do
+                local s = list[i]
+                for _, o in ipairs(own) do
+                    local dx, dy = (s.x or 9) - (o.x or 0), (s.y or 9) - (o.y or 0)
+                    if dx * dx + dy * dy <= MERGE_RADIUS * MERGE_RADIUS and type(s.fish) == "table" and type(o.fish) == "table" then
+                        local within = true
+                        for itemID, count in pairs(s.fish) do
+                            if (tonumber(count) or 0) > (tonumber(o.fish[itemID]) or 0) then within = false break end
+                        end
+                        if within then table.remove(list, i) break end
+                    end
+                end
+            end
+        end
+    end
+end
+
 ns:SubscribeAddonEvent("AM_DB_READY", function()
     ns.db.shared = ns.db.shared or {}
+    pcall(dropOwnEchoes, ns.db)
     playerName = (UnitName("player") or "Player") .. "-" .. ((GetNormalizedRealmName and GetNormalizedRealmName()) or (GetRealmName and GetRealmName()) or "")
+    local name, second = UnitName("player")
+    -- (a realm never has a space, so "name realm" can't match another player)
+    if type(name) == "string" and type(second) == "string" and second ~= ""
+        and not (issecretvalue and (issecretvalue(name) or issecretvalue(second))) then
+        playerWithSurname = name .. " " .. second
+    end
     C_ChatInfo.RegisterAddonMessagePrefix(PREFIX)
 end)
 ns:SubscribeAddonEvent("CHAT_MSG_ADDON", PartyGuildSpotSync.onMessage)
