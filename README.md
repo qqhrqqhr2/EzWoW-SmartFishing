@@ -39,7 +39,7 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 | ④ | 기록 창 탭 (`/ezsf`) | **세션**(이번 세션 통계) · **기록**(최근에 낚은 물고기와 장소 · 시각, 클릭하면 지도에서 보기) · **도감**(처음 낚은 날 · 장소 · 마리 수) · **지역**(현재 지역 어종과 기대 확률, 권장 숙련, “지도 열기”) |
 | ⑤ | 세션 통계 | 시간 · 던짐 · 낚음 · 놓침 · 성공률 · 시간당과 어종별 비율. **새 세션**으로 다시 시작합니다. |
 | ⑥ | 물고기 툴팁 | 잘 잡히는 지역 3곳과 확률(권장 숙련), 물고기 떼가 나오는 지역, 내가 낚은 수. |
-| ⑦ | 월드맵 어종 범례 | 세계지도 왼쪽 아래 **도킹 버튼**으로 펼칩니다. 한 창에서 현재 지역의 일반 낚시 어종 전체와 확률 · 내 기록 수, 물고기 떼, **핀 숨김** · **설정** 버튼을 봅니다(길면 휠로 넘김). 물고기를 누르면 그 물고기의 지점만 보이고, 대륙 지도에서는 그 물고기가 나오는 **모든 지역과 확률**, 다른 대륙 바로가기가 나옵니다. 확률은 내 기록과 공유받은 기록이 쌓이면 실제 낚은 결과를 반영합니다. |
+| ⑦ | 월드맵 어종 범례 | 세계지도 왼쪽 아래 **도킹 버튼**으로 펼칩니다. 한 창에서 현재 지역의 일반 낚시 어종 전체와 확률 · 권장 숙련 · 내 기록 수, 이 지도의 다른 곳에서 나오는 어종, 물고기 떼, **핀 숨김** · **설정** 버튼을 봅니다(길면 휠로 넘김). 물고기를 누르면 그 물고기의 지점만 보이고, 대륙 지도에서는 그 물고기가 나오는 **모든 지역과 확률**, 다른 대륙 바로가기가 나옵니다. 지역 지도에는 물고기가 잡히는 물가마다 확률 핀을 찍습니다. 확률은 내 기록과 공유받은 기록이 쌓이면 실제 낚은 결과를 반영합니다. |
 | ⑧ | 지도 핀 | 내가 물고기를 낚은 지점(가장 많이 낚은 어종 아이콘), 내장된 **물고기 떼 출현 지점**(파란 테두리), 공유받은 지점(금색 테두리). |
 
 #### 원버튼 낚시 동작
@@ -142,7 +142,7 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 | ④ | Log tabs (`/ezsf`) | **Session** (this session) · **Log** (recent catches with place and time; click to see it on the map) · **Journal** (first catch date, place, count) · **Zone** (fish and expected chances here, recommended skill, “Open map”) |
 | ⑤ | Session stats | Time, casts, caught, missed, success, per hour and share per fish. **New session** restarts. |
 | ⑥ | Fish tooltip | The three best zones with chances (and recommended skill), zones with fish schools, and how many you have caught. |
-| ⑦ | World Map fish legend | Opened from the **dock button** at the bottom-left of the World Map. One panel shows every open-water fish of the zone with chances and your catch count, the fish schools, and **Hide pins** / **Settings** buttons (scroll with the wheel when long). Click a fish to show only its spots; on continent maps it lists **every zone and chance** for that fish and links to other continents. As your own and shared catches add up, the chances follow what is really caught. |
+| ⑦ | World Map fish legend | Opened from the **dock button** at the bottom-left of the World Map. One panel shows every open-water fish of the zone with chances, recommended skill and your catch count, fish from other spots on the map, the fish schools, and **Hide pins** / **Settings** buttons (scroll with the wheel when long). Click a fish to show only its spots; on continent maps it lists **every zone and chance** for that fish and links to other continents. Zone maps mark the water where fish are caught with chance pins. As your own and shared catches add up, the chances follow what is really caught. |
 | ⑧ | Map pins | Your catch spots (icon of the most-caught fish), built-in **fish school spawn points** (blue rim) and shared spots (gold rim). |
 
 #### How one-button fishing works

@@ -40,8 +40,9 @@ An all-in-one fishing helper for WoW Forever. With a pole equipped, one key (Spa
 - **Zone**: fish and expected chances where you stand, with the recommended skill.
 
 ### World Map
-- A button at the bottom-left of the World Map opens the fish legend. One panel shows every open-water fish of the zone with chances and your catch count, the fish schools, a pin toggle and settings (scroll with the wheel when long).
+- A button at the bottom-left of the World Map opens the fish legend. One panel shows every open-water fish of the zone with chances, recommended skill and your catch count, fish from other spots on the map, the fish schools, a pin toggle and settings (scroll with the wheel when long).
 - Click a fish to see only its spots; on continent maps it ranks the best zones for that fish and links to other continents.
+- Zone maps mark the water where fish are caught with chance pins: the chosen fish's spots, or the most likely fish at each spot.
 - As your own and shared catches add up, the chances follow what is really caught.
 - Pins for your catch spots (icon of the most-caught fish), built-in fish school spawn points (blue rim) and spots shared by others (gold rim).
 
@@ -117,8 +118,9 @@ WoW Forever용 올인원 낚시 애드온입니다. 낚싯대를 들고 키 하�
 - **지역**: 지금 있는 지역의 어종과 기대 확률, 권장 숙련.
 
 ### 세계지도
-- 세계지도 왼쪽 아래 버튼으로 어종 범례를 펼칩니다. 한 창에서 지역의 일반 낚시 어종 전체와 확률 · 내 기록 수, 물고기 떼, 핀 숨김, 설정을 봅니다(길면 휠로 넘김).
+- 세계지도 왼쪽 아래 버튼으로 어종 범례를 펼칩니다. 한 창에서 지역의 일반 낚시 어종 전체와 확률 · 권장 숙련 · 내 기록 수, 이 지도의 다른 곳에서 나오는 어종, 물고기 떼, 핀 숨김, 설정을 봅니다(길면 휠로 넘김).
 - 물고기를 누르면 그 물고기의 지점만 보여 줍니다. 대륙 지도에서는 그 물고기가 잘 잡히는 지역 순위와 다른 대륙 바로가기를 보여 줍니다.
+- 지역 지도에는 물고기가 잡히는 물가마다 확률 핀을 찍습니다: 고른 물고기가 나오는 곳, 또는 물가마다 가장 잘 나오는 물고기.
 - 내 기록과 공유받은 기록이 쌓이면 확률이 실제 낚은 결과를 반영합니다.
 - 내가 낚은 지점(가장 많이 낚은 어종 아이콘), 내장된 물고기 떼 출현 지점(파란 테두리), 공유받은 지점(금색 테두리)을 핀으로 표시합니다.
 
