@@ -19,11 +19,9 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 
 ### 화면 미리보기
 
-![낚시 HUD, 기록 창, 세계지도](docs/images/ui_ko.png)
+![설정창](docs/images/ui_ko.png)
 
-![설정창](docs/images/settings_ko.png)
-
-> 이미지는 애드온 코드의 창 크기·좌표·색상·문구로 재현한 **예시 화면**입니다. 어종과 확률은 애드온에 들어 있는 **서부 몰락지대** 데이터이고, 세션 숫자는 예시입니다.
+> 실제 게임 화면입니다(WoW Forever, 한국어 클라이언트). 캐릭터 · 다른 플레이어 이름과 채팅 내용은 가렸습니다.
 
 ### 설치
 
@@ -31,7 +29,7 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 2. 캐릭터 선택 화면의 **애드온** 목록에서 켭니다.
 3. 미니맵 버튼 **좌클릭**(또는 `/ezsf pole`)으로 낚싯대를 들고, 물가에서 **스페이스**를 누르세요.
 
-### 사용법 (위 그림의 번호)
+### 사용법
 
 | 번호 | 부분 | 설명 |
 |---|---|---|
@@ -124,11 +122,9 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 
 ### Screenshots
 
-![Fishing HUD, log window and World Map](docs/images/ui_en.png)
+![Settings window](docs/images/ui_en.png)
 
-![Settings window](docs/images/settings_en.png)
-
-> These are **mock-ups** rebuilt from the window sizes, coordinates, colours and strings in the code. Fish and chances are the bundled **Westfall** data; session numbers are examples.
+> In-game screenshots (WoW Forever, Korean client). Character and player names and chat text are blurred.
 
 ### Installation
 
@@ -136,7 +132,7 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 2. Enable it in the **AddOns** list on the character select screen.
 3. **Left-click** the minimap button (or `/ezsf pole`) to equip your pole, stand by water and press **Space**.
 
-### How to use (numbers in the picture)
+### How to use
 
 | No. | Part | Description |
 |---|---|---|
