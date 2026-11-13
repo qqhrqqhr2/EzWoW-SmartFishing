@@ -18,8 +18,9 @@ local RING = {
     shared = { 0.80, 0.62, 0.25, 0.95 },
     pool   = { 0.30, 0.58, 1.00, 1 },
     zone   = { 0.27, 0.78, 0.88, 0.95 },
+    water  = { 0.20, 0.55, 0.75, 0.9 },
 }
-local SIZE = { own = 20, shared = 18, pool = 18, zone = 26 }
+local SIZE = { own = 20, shared = 18, pool = 18, zone = 26, water = 20 }
 
 EzWoW_SmartFishingPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
@@ -54,6 +55,12 @@ function EzWoW_SmartFishingPinMixin:OnAcquired(entry)
         self:SetAlpha(0.9)
     elseif kind == "zone" then
         iconID = filter
+        self.Label:SetText(string.format("%.0f%%", entry.pct))
+        self.Label:SetTextColor(unpack(StyleService.accent))
+        self.Label:Show()
+    elseif kind == "water" then
+        iconID = entry.id
+        self:SetAlpha(0.9)
         self.Label:SetText(string.format("%.0f%%", entry.pct))
         self.Label:SetTextColor(unpack(StyleService.accent))
         self.Label:Show()
@@ -110,6 +117,28 @@ function EzWoW_SmartFishingPinMixin:OnMouseEnter()
         end
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine(L["클릭하면 이 지역 지도로 이동"], unpack(StyleService.muted))
+    elseif kind == "water" then
+        GameTooltip:AddLine(entry.place or ns:MapName(entry.mapID), 1, 1, 1)
+        if filter then
+            GameTooltip:AddLine(string.format(L["%s 예상 확률 %.1f%%"], ns:ItemName(filter), entry.pct), unpack(StyleService.muted))
+        else
+            local list = {}
+            for id, p in pairs(entry.fish or {}) do list[#list + 1] = { id = id, p = p } end
+            table.sort(list, function(a, b) return a.p > b.p end)
+            for index = 1, math.min(MAX_TOOLTIP_FISH, #list) do
+                local row = list[index]
+                if row.p < 0.5 then break end
+                local left = "|T" .. ns:ItemIcon(row.id) .. ":14:14:0:0:64:64:5:59:5:59|t " .. ns:ItemName(row.id)
+                GameTooltip:AddDoubleLine(left, string.format("%.0f%%", row.p), 1, 1, 1, 0.7, 0.72, 0.76)
+            end
+        end
+        if entry.skill then
+            GameTooltip:AddLine(L["권장 숙련 %d"]:format(entry.skill), unpack(StyleService.muted))
+        end
+        if not filter then
+            GameTooltip:AddLine(" ")
+            GameTooltip:AddLine(L["클릭: 지도에서 이 물고기 지점 보기"], unpack(StyleService.muted))
+        end
     elseif kind == "pool" then
         GameTooltip:AddLine(ns:PoolLabel(entry.poolType), 1, 1, 1)
         GameTooltip:AddLine(L["물고기 떼가 나타나는 자리 (기본 데이터)"], unpack(StyleService.muted))
@@ -150,7 +179,13 @@ function EzWoW_SmartFishingPinMixin:SetPassThroughButtons(...)
 end
 
 function EzWoW_SmartFishingPinMixin:OnMouseClickAction(button)
-    if button == "LeftButton" and self.entry and self.entry.child then
+    if button ~= "LeftButton" or not self.entry then return end
+    if self.entry.kind == "water" then
+        -- the spot's most likely fish: show only that fish
+        if not ns.settings.filterFish and self.entry.id then ns:SetFishFilter(self.entry.id) end
+        return
+    end
+    if self.entry.child then
         ns:GoToMap(self.entry.mapID)
     end
 end
@@ -206,10 +241,19 @@ function MapDataProvider:RefreshAllData()
             if rowEntry and zoneRef.pct >= 0.5 then
                 local zdVal = ns.Data.zones[zoneRef.mapID]
                 map:AcquirePin(TEMPLATE, {
-                    kind = "zone", mapID = zoneRef.mapID, child = true, pct = zoneRef.pct, skill = zdVal and zdVal.s,
+                    kind = "zone", mapID = zoneRef.mapID, child = true, pct = zoneRef.pct, skill = zoneRef.s or (zdVal and zdVal.s),
                     x = (rowEntry[1] + rowEntry[2]) / 2, y = (rowEntry[3] + rowEntry[4]) / 2,
                 })
             end
+        end
+    end
+
+    -- a zone map: the water where each fishing table applies (the chosen fish, or
+    -- the most likely fish of every spot)
+    if set.showExpected and ns.WaterSpotsOnMap then
+        for _, spot in ipairs(ns:WaterSpotsOnMap(mapID, filter)) do
+            spot.kind, spot.mapID, spot.skill = "water", mapID, spot.s
+            map:AcquirePin(TEMPLATE, spot)
         end
     end
 

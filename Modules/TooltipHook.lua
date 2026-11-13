@@ -149,7 +149,8 @@ function TooltipCatchAdvisor.AddItemLines(tooltipFrame, tooltipData)
     for _, zoneInfo in ipairs(zoneList) do
         if renderedCount >= MAX_DISPLAYED_ZONES or zoneInfo.pct < 1 then break end
         local zoneMeta = ns.Data.zones[zoneInfo.mapID]
-        local skillSuffix = (zoneMeta and zoneMeta.s) and ("  |cff8c94a3" .. zoneMeta.s .. "|r") or ""
+        local zoneSkill = zoneInfo.s or (zoneMeta and zoneMeta.s)
+        local skillSuffix = zoneSkill and ("  |cff8c94a3" .. zoneSkill .. "|r") or ""
         tooltipFrame:AddDoubleLine(
             ns:MapName(zoneInfo.mapID) .. skillSuffix,
             format("%.0f%%", zoneInfo.pct),

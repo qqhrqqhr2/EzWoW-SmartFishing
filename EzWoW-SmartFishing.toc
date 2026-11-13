@@ -22,6 +22,7 @@
 ## Author: qqhrqqhr2
 ## Version: 2.0.17
 ## Category: EzWoW
+## X-Credits: open-water catch chances from CMaNGOS Classic-DB (GPL v3)
 ## X-License: GPL-3.0
 ## SavedVariables: EzWoW_SmartFishingDB, EzWoW_SharedData, EzWoW_ShareStore_SmartFishing
 ## IconTexture: Interface\AddOns\EzWoW-SmartFishing\Media\icon
