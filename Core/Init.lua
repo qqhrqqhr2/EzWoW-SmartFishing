@@ -19,6 +19,7 @@ local DEFAULTS = {
     setSoftInteract = true, 
     combatSwap = true,  
     reequipPole = true, 
+    swapMessages = true, 
     showHUD = true,     
     hudScale = 1.0,     
     pinScale = 1.0,     

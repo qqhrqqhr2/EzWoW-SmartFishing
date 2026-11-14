@@ -24,7 +24,7 @@ An all-in-one fishing helper for WoW Forever. With a pole equipped, one key (Spa
 
 ### Lures and gear
 - If there is no lure on the pole, the best lure in your bags that your skill allows is applied first.
-- One click equips your best pole and puts your weapons back when you are done; chat tells you what was swapped.
+- One click equips your best pole and puts your weapons back when you are done; chat tells you what was swapped (this can be turned off in the options).
 - Swap to weapons when combat starts and back to the pole when it ends.
 
 ### Session HUD and fishing sound
@@ -102,7 +102,7 @@ WoW Forever용 올인원 낚시 애드온입니다. 낚싯대를 들고 키 하�
 
 ### 미끼와 장비
 - 낚싯대에 미끼가 없으면 내 숙련으로 쓸 수 있는 가방 속 가장 좋은 미끼를 먼저 바릅니다.
-- 클릭 한 번으로 가장 좋은 낚싯대를 들고, 끝나면 원래 무기로 돌아갑니다. 무엇을 바꿨는지 채팅으로 알려 줍니다.
+- 클릭 한 번으로 가장 좋은 낚싯대를 들고, 끝나면 원래 무기로 돌아갑니다. 무엇을 바꿨는지 채팅으로 알려 줍니다(설정에서 끌 수 있음).
 - 전투가 시작되면 무기로, 끝나면 다시 낚싯대로 바꿉니다.
 
 ### 세션 HUD와 낚시 소리

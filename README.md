@@ -69,6 +69,7 @@ WoW Forever (`Interface: 16001`) · `/ezsf`
 | ② | 원버튼 키: 스페이스 · F · G · R · T · V · 마우스 휠 클릭 · 마우스 4번 · 마우스 5번 (클릭: 목록, 우클릭: 다음 키, 그 밖의 키는 `/ezsf key 키`) | 스페이스 |
 | ③ | 낚시 중 소리 키우기 · 음악·주변 소리 줄이기 | 켬 · 끔 |
 | ④ | 전투가 시작되면 무기로 교체 · 전투가 끝나면 낚싯대 다시 들기 | 켬 · 켬 |
+| ④ | 장비를 바꿀 때 채팅 알림 (끄면 교체·찌 인식 설정 알림을 채팅에 띄우지 않음) | 켬 |
 | ④ | 버튼: 낚싯대 / 평소 무기 (바꾸기) · 낚시 기록 창 (/ezsf) | - |
 | ⑤ | 낚싯대를 들면 세션 창 표시 · 지도에 낚시 지점 표시 | 켬 |
 | ⑤ | 세계지도에 물고기 선택 버튼 표시 · 세계지도 버튼 좌하단 자동 정렬 | 켬 |
@@ -172,6 +173,7 @@ An all-in-one fishing helper. With a pole equipped, **one key (Space by default)
 | ② | One-button key: Space · F · G · R · T · V · middle mouse · mouse 4 · mouse 5 (click: list, right-click: next key, any other key with `/ezsf key KEY`) | Space |
 | ③ | Louder sound while fishing · Mute music & ambience | On · Off |
 | ④ | Swap to weapons when combat starts · Re-equip pole after combat | On · On |
+| ④ | Chat notes on gear swaps (off: no chat notes for swaps and interact settings) | On |
 | ④ | Buttons: Fishing pole / weapons (Swap) · Fishing log (/ezsf) | - |
 | ⑤ | Show session panel when a pole is equipped · Show fishing spots on the map | On |
 | ⑤ | Show fish picker button on the world map · Auto-align world map button (bottom-left) | On |

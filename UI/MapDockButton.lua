@@ -24,10 +24,13 @@ function WorldMapFilterButton.moveMap(mapID, open)
     -- with the gamepad on, a map opened or moved by addon code taints the
     -- gamepad navigation (Libs/EzWoWGamePad): left to the player
     if ns.GamePad and ns.GamePad.IsActive() then return end
-    if open and not WorldMapFrame:IsShown() then
-        if OpenWorldMap then OpenWorldMap(mapID) else ToggleWorldMap() end
+    -- opened and moved by the game itself (C_Map.OpenWorldMap): a map opened or
+    -- moved from addon code keeps values written by tainted code, and its own
+    -- pins are then blocked in combat (SetPassThroughButtons)
+    if not (C_Map and C_Map.OpenWorldMap) or (InCombatLockdown and InCombatLockdown()) then return end
+    if (open and not WorldMapFrame:IsShown()) or (mapID and WorldMapFrame:IsShown()) then
+        pcall(C_Map.OpenWorldMap, mapID)
     end
-    if mapID and WorldMapFrame:IsShown() then WorldMapFrame:SetMapID(mapID) end
 end
 
 function ns:GoToMap(mapID, open)

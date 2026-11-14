@@ -418,11 +418,20 @@ function ZoneDropRateLegend.render()
     legend:SetHeight(TOP_PAD + shown * ROW_H + bottomPad)
 end
 
+-- the rows show other fish after a scroll: a row's tooltip would be out of date
+function ZoneDropRateLegend.dropRowTooltip()
+    local owner = GameTooltip and GameTooltip:IsShown() and GameTooltip:GetOwner()
+    if owner and owner.GetParent and owner:GetParent() == legend then GameTooltip:Hide() end
+end
+
 function ZoneDropRateLegend.scrollBy(step)
     if not legend or not legend:IsShown() then return end
     local total, visible = #legend.items, legend.visible or MIN_ROWS
     if total <= visible then return end
-    legend.offset = math.max(0, math.min(total - visible, legend.offset + step))
+    local offset = math.max(0, math.min(total - visible, legend.offset + step))
+    if offset == legend.offset then return end
+    legend.offset = offset
+    ZoneDropRateLegend.dropRowTooltip()
     ZoneDropRateLegend.render()
 end
 
@@ -431,6 +440,7 @@ function ZoneDropRateLegend.pageDown()
     local total, visible = #legend.items, legend.visible or MIN_ROWS
     if total <= visible then return end
     if legend.offset + visible >= total then legend.offset = 0 else legend.offset = legend.offset + visible end
+    ZoneDropRateLegend.dropRowTooltip()
     ZoneDropRateLegend.render()
 end
 

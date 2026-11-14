@@ -247,10 +247,10 @@ function DoubleClickCastEngine.commitSoftInteract(forceRestore)
     local widened = next(cvarsBeforePole) ~= nil
     if widened and (applied or not DoubleClickCastEngine.softInteractAnnounced) then
         DoubleClickCastEngine.softInteractAnnounced = true
-        ns:Print(L["낚싯대를 착용해서 찌를 잘 인식하도록 상호작용 설정을 바꿨어요. 낚시를 마치면 원래대로 돌아갑니다."])
+        if not (ns.settings and ns.settings.swapMessages == false) then ns:Print(L["낚싯대를 착용해서 찌를 잘 인식하도록 상호작용 설정을 바꿨어요. 낚시를 마치면 원래대로 돌아갑니다."]) end
     elseif restored then
         DoubleClickCastEngine.softInteractAnnounced = nil
-        ns:Print(L["상호작용 설정을 낚싯대 착용 전 값으로 되돌렸어요."])
+        if not (ns.settings and ns.settings.swapMessages == false) then ns:Print(L["상호작용 설정을 낚싯대 착용 전 값으로 되돌렸어요."]) end
     end
 end
 
