@@ -20,7 +20,7 @@
 ## Notes-esMX: Pesca con una tecla, cebo y equipo automáticos, estadísticas de sesión, catálogo, puntos de pesca y bancos en el mapa del mundo, compartidos con hermandad y grupo.
 ## Notes-ruRU: Рыбалка одной кнопкой, авто-наживка и экипировка, статистика сессии, журнал улова, рыбные места и косяки на карте мира с обменом данными в гильдии и группе.
 ## Author: qqhrqqhr2
-## Version: 2.0.19
+## Version: 2.0.20
 ## Category: EzWoW
 ## X-Credits: open-water catch chances from CMaNGOS Classic-DB (GPL v3)
 ## X-License: GPL-3.0
